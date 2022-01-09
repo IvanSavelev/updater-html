@@ -1,0 +1,30 @@
+version: "3.7"
+
+services:
+
+  nginx:
+    container_name: nginx
+    image: nginx:1.17-alpine
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/updater
+      - ./nginx/updater.conf:/etc/nginx/conf.d/updater.conf:ro
+      - ./nginx/logs:/var/log/nginx
+    depends_on:
+      - php
+    ports:
+      - 80:80
+    networks:
+      - network
+
+  php:
+    image: php:7.4-fpm
+    working_dir: /var/www/updater/php
+    volumes:
+      - ./php:/var/www/updater/php
+    networks:
+      - network
+    tty: true
+
+networks:
+  network:
