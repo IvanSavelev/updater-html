@@ -22,22 +22,25 @@ function _blink(wsdom, settings) {
  */
 function showBlink(wsdom, settings) {
   showBlinkSingle(wsdom, settings);
-  if (wsdom.node_type === 1) {
+
+
     for (let i = 0; i < wsdom.children.length; i++) {
       showBlink(wsdom.children[i], settings);
     }
-  }
+
 
   /**
    * Сравниваем, если у объекта есть свойство с данной меткой
-   * @param wsdom {WSDOM}
    * @param settings - настройки модуля
    */
   function showBlinkSingle(wsdom, settings) {
+    let object;
     for (let key in settings.class_color_flag) {
       if (wsdom['label_' + key]) {
+        object = wsdom.node_type === 1 ? wsdom.dom_element : wsdom.dom_element.parentElement;
+        object = wsdom.dom_element;
         // noinspection JSUnfilteredForInLoop (нужно чтоб phpstorm не ругался)
-        addClass(wsdom.dom_element, settings.class_color_flag[key], 'all'); //Подсвечиваем изменения
+        addClass(object, settings.class_color_flag[key], 'all'); //Подсвечиваем изменения
       }
     }
   }

@@ -17,27 +17,86 @@
         .uploader-delete {background-color: red; }
         .uploader-update-tag {background-color: grey; }
         .uploader-update-type {background-color: darkslategrey; }
+        p {font-size: 15px;
+            margin: 3px;}
     </style>
 </head>
 <body>
 <?php if (@$_COOKIE['num'] === '0') { ?>
     <dev data-websocket_update="4">
-        <p>old0</p>
-        <p>2</p>
-        <p>old1</p>
-        <p>old2</p>
-        <p>5</p>
-        <p>old3</p>
-        <p>6</p>
+        <div>
+            <p>Update Tag:</p>
+            <p>apple</p>
+            <p>orange</p>
+        </div>
+        <div>
+            <p>Update Type:</p>
+            <p>apple</p>
+            <p>orange</p>
+        </div>
+        <div>
+            <p>Move:</p>
+            <p>apple</p>
+            <p>orange</p>
+        </div>
+        <div>
+            <p>Move Analytical:</p>
+            <p>apple</p>
+            <p>orange</p>
+        </div>
+        <div>
+            <p>Delete:</p>
+            <p>apple</p>
+            <p>orange</p>
+        </div>
+        <div>
+            <p>Add:</p>
+            <p>apple</p>
+            <p>orange</p>
+        </div>
+        <div>
+            <p>Update:</p>
+            <p>apple</p>
+            <p>orange</p>
+        </div>
     </dev>
 <?php } else { ?>
-    <dev data-websocket_update="4">
-        <p>new0</p>
-        <p>new1</p>
-        <p>2</p>
-        <p>new2</p>
-        <p>5</p>
-        <p>6</p>
+    <dev data-websocket_update="4" >
+        <div>
+            <p>Update Tag:</p>
+            <p class="new">apple</p>
+            <p data-change="true">orange</p>
+        </div>
+        <div>
+            <p>Update Type:</p>
+            <div>apple</div>
+            <div>orange</div>
+        </div>
+        <div>
+            <p>Move:</p>
+            <p>orange</p>
+            <p>apple</p>
+        </div>
+        <div>
+            <p>Move Analytical:</p>
+            <p>orange</p>
+            <p>pear</p>
+        </div>
+        <div>
+            <p>Delete:</p>
+            <p>apple</p>
+        </div>
+        <div>
+            <p>Add:</p>
+            <p>apple</p>
+            <p>orange</p>
+            <p>pear</p>
+        </div>
+        <div>
+            <p>Update:</p>
+            <p>pear</p>
+            <p>potato</p>
+        </div>
     </dev>
 <?php } ?>
 

@@ -30,6 +30,7 @@ function _addElements(oldBlockUploader, newBlockUploader) {
 
 function addStepAndNextNumberElementEqual(blockUploader) {
   let children = blockUploader.children;
+  let endNumber = 1;
   for (let i = 0; i < children.length; i++) {
 
     if( children[i].numberElementEqual === undefined) {
@@ -44,8 +45,9 @@ function addStepAndNextNumberElementEqual(blockUploader) {
       }
       //Last block for adding
       if(!isUpdate) {
-        children[i].stepToNumberElementEqual = children.length - i;
+        children[i].stepToNumberElementEqual = endNumber; //That reverse number for adding new element in end
         children[i].nextNumberElementEqual = undefined;
+        endNumber++;
       }
     }
   }
@@ -91,17 +93,26 @@ function add(oldBlockUploader, newBlockUploader) {
  * @param newBlockUploader {BlockUploader}
  */
 function addNew(oldBlockUploader, newBlockUploader) {
+  let endNumber = 1;
   let oldChildren = oldBlockUploader.children;
   let newChildren = newBlockUploader.children;
-  for (let i = 0; i < newChildren.length; i++) {
+  for (let i = newChildren.length - 1; i > 0; i--) {
     if(newChildren[i].stepToNumberElementEqual !== undefined) {
       if(!oldChildren.find(item => (
         item.stepToNumberElementEqual === newChildren[i].stepToNumberElementEqual &&
         item.nextNumberElementEqual === newChildren[i].nextNumberElementEqual))) {
         //Need add
-        let indexItem = oldChildren.findIndex(item => item.numberElementEqual === newChildren[i].nextNumberElementEqual);
-        addAndAddLabel(oldBlockUploader, indexItem, newChildren[i]);
+        if(newChildren[i].nextNumberElementEqual !== undefined) {
+          let indexItem = oldChildren.findIndex(item => item.numberElementEqual === newChildren[i].nextNumberElementEqual);
+          indexItem  = oldChildren.findIndex(item => item.numberElementEqual === newChildren[i].nextNumberElementEqual);
+          addAndAddLabel(oldBlockUploader, indexItem, newChildren[i]);
+        } else {
+          addAndAddLabel(oldBlockUploader, oldChildren.length - endNumber , newChildren[i]);
+          endNumber++;
+        }
+
       }
+
 
     }
   }

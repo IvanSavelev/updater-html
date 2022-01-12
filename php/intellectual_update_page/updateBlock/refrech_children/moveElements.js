@@ -15,7 +15,8 @@ function _moveElements(old_wsdom) {
     let i_up = compare(i, children);
     if (i_up !== null) {
       swap(old_wsdom, i, i_up);
-      setLabel(children[i], children[i_up]);
+      setLabel(children[i]);
+      setLabel(children[i_up]);
       i--; //Снова начинаем поиск
     }
   }
@@ -37,8 +38,8 @@ function compare(startPlace, children) {
       continue;
     }
 
-    if (children[nextPlace].numberElementEqual > children[startPlace].numberElementEqual) {
-      return swapPlaces;
+    if (children[nextPlace].numberElementEqual < children[startPlace].numberElementEqual) {
+      return nextPlace;
     }
     swapPlaces = nextPlace;
   }
@@ -55,10 +56,9 @@ function swap(old_wsdom, i_first, i_next) {
 }
 
 
-function setLabel(wsdom_1, wsdom_2) {
-  if (wsdom_1.node_type === 1 && wsdom_2.node_type === 1) {
+function setLabel(wsdom_1) {
+  if (wsdom_1.node_type === 1) {
     wsdom_1.label_move = true;
-    wsdom_2.label_move = true;
   }
 
 }

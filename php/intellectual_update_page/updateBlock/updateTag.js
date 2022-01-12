@@ -8,6 +8,7 @@ function _updateTag(oldBlockUploader, newBlockUploader) {
       let cloneChildNew = newBlockUploader.dom_element.cloneNode(true); //So that the new element is not deleted, we need to keep it so as not to break further logic
       oldBlockUploader.dom_element.replaceWith(cloneChildNew); //We change all the content, it doesn't come out any other way
       oldBlockUploader.label_update_tag = true; //Add a label
+      oldBlockUploader.dom_element = cloneChildNew;
       return true;
     }
   }

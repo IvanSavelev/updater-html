@@ -37,7 +37,7 @@ function _updateElements(old_wsdom, new_wsdom) {
  * @param parent_wsdom {WSDOM} - ссылка на родителя
  */
 function updateElement(old_wsdom, new_wsdom, parent_wsdom) {
-  if (old_wsdom.node_type === 1 && new_wsdom.node_type === 1 || old_wsdom.node_type !== new_wsdom.node_type) {
+  if (old_wsdom.node_type === 1 && new_wsdom.node_type === 1) {
     old_wsdom.parent = parent_wsdom; //Добавляем parent
     updateBlock(old_wsdom, new_wsdom); //РЕКРУСИВНО ПРОВЕРЯЕМ
   } else {
@@ -63,6 +63,9 @@ function updateBlockEnding(old_wsdom, new_wsdom) {
   let new_value = (new_node_value ? new_node_value : '').trim();
   if (old_value !== new_value) {
     old_wsdom.dom_element.nodeValue = new_node_value;
+
+    let cloneChildNew = new_wsdom.dom_element.cloneNode(true); //So that the new element is not deleted, we need to keep it so as not to break further logic
+    old_wsdom.dom_element.replaceWith(cloneChildNew);
     update_check = true;
   }
   return update_check;
