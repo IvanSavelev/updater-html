@@ -35,12 +35,12 @@ function showBlink(wsdom, settings) {
    */
   function showBlinkSingle(wsdom, settings) {
     let object;
-    for (let key in settings.class_color_flag) {
+    for (let key in settings.classColorFlag) {
       if (wsdom['label_' + key]) {
         object = wsdom.node_type === 1 ? wsdom.dom_element : wsdom.dom_element.parentElement;
         object = wsdom.dom_element;
         // noinspection JSUnfilteredForInLoop (нужно чтоб phpstorm не ругался)
-        addClass(object, settings.class_color_flag[key], 'all'); //Подсвечиваем изменения
+        addClass(object, settings.classColorFlag[key], 'all'); //Подсвечиваем изменения
       }
     }
   }
@@ -82,27 +82,27 @@ function closeBlink(wsdom, settings) {
    * @param item {WSDOM}
    */
   function closeBlinkItem(item) {
-    for (let key in settings.class_color_flag) {
+    for (let key in settings.classColorFlag) {
       if (item['label_' + key]) {
         // noinspection JSUnfilteredForInLoop
-        closeClassBlink(item, settings.class_color_flag[key], settings.time_close_blink);
+        closeClassBlink(item, settings.classColorFlag[key], settings.timeCloseBlink);
       }
     }
   }
 
   /**
-   * Удаляем у объекта item класс name_class через время time_close_blink
+   * Удаляем у объекта item класс name_class через время timeCloseBlink
    * @param item {WSDOM}
    * @param name_class string
-   * @param time_close_blink int
+   * @param timeCloseBlink int
    */
-  function closeClassBlink(item, name_class, time_close_blink) {
+  function closeClassBlink(item, name_class, timeCloseBlink) {
     setTimeout(function () { //Удаляем классы подсветки измененых областей
       let dom_element = item.dom_element;
       if (dom_element.classList) {
         dom_element.classList.remove(name_class);
       }
-    }, time_close_blink);
+    }, timeCloseBlink);
   }
 }
 

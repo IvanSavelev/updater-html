@@ -12,8 +12,8 @@ let newBlockUploaderList = []
 export function UpdateBlock(_settings) {
   settings = Object.assign({}, settingsDefault, _settings);
   checkRequiredField();
-  oldDomNodeList = settings.old_dom_document.querySelectorAll('[' + settings.query_selector + ']');
-  newDomNodeList = settings.new_dom_document.querySelectorAll('[' + settings.query_selector + ']');
+  oldDomNodeList = settings.oldDomDocument.querySelectorAll('[' + settings.querySelector + ']');
+  newDomNodeList = settings.newDomDocument.querySelectorAll('[' + settings.querySelector + ']');
   checkDomNodeList();
   preparationDomNodeList();
   setBlockUploaderList();
@@ -31,33 +31,33 @@ export function UpdateBlock(_settings) {
  * Check required fields
  */
 function checkRequiredField() {
-  if (!settings.old_dom_document) {
+  if (!settings.oldDomDocument) {
     throw new Error('No old_dom_document!');
   }
-  if (!settings.new_dom_document) {
-    throw new Error('No new_dom_document!');
+  if (!settings.newDomDocument) {
+    throw new Error('No newDomDocument!');
   }
 }
 
 
 const settingsDefault = {
-  old_dom_document: null, //Обязательное поле старая DOM страница
-  new_dom_document: null, //Обязательное поле новая DOM страница
-  debug: false, //Показывать - скрывать логи
-  time_close_blink: 500, //Время подсветки измененых областей
-  query_selector: 'data-websocket_update', //Селектор для выбора блоков для обновления
-  class_color_flag: { //Классы подсветки измененых облас тей (действие/название класса)
-    update_content: 'uploader-update', //Обновление контента внутри элемента
-    move: 'uploader-move', //Перемещение (смена элементов местами, чтобь шли по порядку)
+  oldDomDocument: null, //Required field old DOM page
+  newDomDocument: null, //Required field new DOM page
+  debug: false, //Show-hide logs
+  timeCloseBlink: 500, //Time blink
+  querySelector: 'data-websocket_update', //Selector for selecting blocks to update
+  classColorFlag: { //Classes for highlighting modified areas (action/class name)
+    update_content: 'uploader-update', //Updating content
+    move: 'uploader-move', //Moving (swapping elements so that they go in order)
     move_analytical: 'uploader-move-analytical', //Умное перемещение
-    update_attributes: 'uploader-update-attribute', //Обновление атрибутов
-    add: 'uploader-add', //Добавление нового элемента
-    delete: 'uploader-delete', //Удаление элемента
-    update_tag: 'uploader-update-tag', //Обновление тега элемента
-    update_type: 'uploader-update-type', //Обновление тега элемента
+    update_attributes: 'uploader-update-attribute', //Smart moving
+    add: 'uploader-add', //Adding a new element
+    delete: 'uploader-delete', //Delete a element
+    update_tag: 'uploader-update-tag', //Updating the element tag (class, data, name etc, except for teg style)
+    update_type: 'uploader-update-type', //Updating type element (p to div or div to h1 etc)
   },
-  event: { //События, на которые можно привязать фу-ии
-    end_update: function () { //Происходит, когда блоки перересованны
+  event: { //Events to which functions can be linked
+    end_update: function () { //Occurs when blocks are redrawn
     },
   }
 };
@@ -69,9 +69,9 @@ function checkDomNodeList() {
     throw new Error("Updater: count BlockUpdater differently!");
   }
   for (let i = 0; i < oldDomNodeList.length; ++i) {
-    let attribute = oldDomNodeList[i].getAttribute(settings.query_selector);
+    let attribute = oldDomNodeList[i].getAttribute(settings.querySelector);
     if (!isBlockUpdaterEqual(attribute)) {
-      throw new Error("Updater: blocks updater arent equal (no block " + oldDomNodeList[i].getAttribute(settings.query_selector) + ") !");
+      throw new Error("Updater: blocks updater arent equal (no block " + oldDomNodeList[i].getAttribute(settings.querySelector) + ") !");
     }
   }
 
@@ -83,9 +83,9 @@ function checkDomNodeList() {
   }
 
   for (let i = 0; i < oldDomNodeList.length; ++i) {
-    let attribute = oldDomNodeList[i].getAttribute(settings.query_selector);
+    let attribute = oldDomNodeList[i].getAttribute(settings.querySelector);
     if (!isBlockUpdaterEqual(attribute)) {
-      throw new Error("Updater: blocks new and old updater arent equal for name (no block " + oldDomNodeList[i].getAttribute(settings.query_selector) + ") !");
+      throw new Error("Updater: blocks new and old updater arent equal for name (no block " + oldDomNodeList[i].getAttribute(settings.querySelector) + ") !");
     }
   }
 
@@ -94,7 +94,7 @@ function checkDomNodeList() {
 
 function isBlockUpdaterEqual(checkAttribute) {
   for (let i = 0; i < newDomNodeList.length; ++i) {
-    if (checkAttribute === newDomNodeList[i].getAttribute(settings.query_selector)) {
+    if (checkAttribute === newDomNodeList[i].getAttribute(settings.querySelector)) {
       return true;
     }
   }
@@ -104,7 +104,7 @@ function isBlockUpdaterEqual(checkAttribute) {
 function isBlockUpdaterSameName(NodeList) {
   let attributes = [];
   for (let i = 0; i < NodeList.length; ++i) {
-    attributes.push(NodeList[i].getAttribute(settings.query_selector));
+    attributes.push(NodeList[i].getAttribute(settings.querySelector));
   }
   if ([...new Set(attributes)].length !== attributes.length) {
     return true;
@@ -126,7 +126,7 @@ function setBlockUploaderList() {
   newBlockUploaderList = [];
   for (let i = 0; i < oldDomNodeList.length; i++) {
     const oldBlock = oldDomNodeList[i];
-    const newBlock = getNewBlockForName(oldBlock.getAttribute(settings.query_selector));
+    const newBlock = getNewBlockForName(oldBlock.getAttribute(settings.querySelector));
 
     let oldBlockUploader = createUploaderBlock(oldBlock); //Creates an array of wrapper objects for the DOM object
     let newBlockUploader = createUploaderBlock(newBlock);
@@ -137,7 +137,7 @@ function setBlockUploaderList() {
 
 function getNewBlockForName(name) {
   for (let i = 0; i < newDomNodeList.length; i++) {
-    if (newDomNodeList[i].getAttribute(settings.query_selector) === name) {
+    if (newDomNodeList[i].getAttribute(settings.querySelector) === name) {
       return newDomNodeList[i];
     }
   }
@@ -160,8 +160,8 @@ function updateOldBlock(oldBlockUploader, newBlockUploader) {
 
 function finishSteps() {
   for (let i = 0; i < oldBlockUploaderList.length; i++) {
-    blink(oldBlockUploaderList[i], settings); //Функция проверяет свойства объектов, и там где надо вставляяет классы для подсветки измененых/перемещеных/удаленых/добавленых областей, а потом убирает //modul blink.js
-    deleteElement(oldBlockUploaderList[i], settings); //Удаляем элементы отмеченные для удаления //modul delete_for_label.js
+    blink(oldBlockUploaderList[i], settings); // The function checks the properties of objects, and inserts classes where necessary to highlight the changed/moved/deleted/added areas, and then removes
+    deleteElement(oldBlockUploaderList[i], settings); //Deleting the items labeled for deletion
   }
 }
 
@@ -175,7 +175,7 @@ function createUploaderBlock(domElement) {
   object.debug = settings.debug;
 
   if (domElement.nodeType === 1) {
-    // noinspection JSValidateTypes (нужно чтоб phpstorm не ругался)
+    // noinspection JSValidateTypes
     for (let i = 0; i < domElement.childNodes.length; i++) {
       object.children.push(createUploaderBlock(domElement.childNodes[i]));
     }

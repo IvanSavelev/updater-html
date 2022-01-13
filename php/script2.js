@@ -9,8 +9,8 @@ function updateContentWebSocket() {
       let docNew = new DOMParser().parseFromString(data, "text/html");
       console.log(docNew);
       UpdateBlock({
-        new_dom_document:docNew,
-        old_dom_document:document,
+        newDomDocument:docNew,
+        oldDomDocument:document,
         debug: true
       });
     });
