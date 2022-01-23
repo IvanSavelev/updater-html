@@ -7,58 +7,106 @@ export function moveElementsAnalytical(oldBlockUploader, newBlockUploader) {
 
 /**
  * Делает перемещение, чтобы не удалять элементы, а именно перемещать (пример: <p>1</p><p>2</p> => <p>update</p><p>1</p> - должно быть одно перемещение, и обновление)
-
  */
 function _moveElementsAnalytical(oldBlockUploader, newBlockUploader) {
-  let stepProp = 0;
-  let stepFact = 0;
-  for (let [index, item]  of oldBlockUploader.children.entries()) {
+
+  addProperty(oldBlockUploader);
+  addProperty(newBlockUploader);
+  addStepMax(oldBlockUploader, newBlockUploader);
+  move(oldBlockUploader);
+  
+  newBlockUploader.logger('Выводим св-ва объектов (новые)(до аналитического перемещения):', 'count_undefined_prev', 'count_undefined_next');
+  oldBlockUploader.logger('Выводим св-ва объектов (старые)(до аналитического перемещения):', 'count_undefined_prev', 'count_undefined_next');
+  
+  
+  
+
+  
+  oldBlockUploader.logger('Выводим св-ва объектов (старые)(до аналитического перемещения):', 'stepNextMax', 'stepPrevMax');
+  
+ 
+
+  oldBlockUploader.logger('Выводим св-ва объектов (старые)(после аналитического перемещения):');
+}
+
+
+function addProperty(newBlockUploader)
+{
+  let j = 0;
+  for (let i = 0; i < newBlockUploader.children.length; i++) {
+
+    let item = newBlockUploader.children[i];
+    if(item.numberElementEqual !== undefined) {
+      item.count_undefined_prev = j;
+      j = 0;
+    } else {
+      j++;
+    }
+
+  }
+
+  j =0;
+  for (let i = newBlockUploader.children.length - 1; i > 0; i--) {
+
+    let item = newBlockUploader.children[i];
+    if(item.numberElementEqual !== undefined) {
+      item.count_undefined_next = j;
+      j = 0;
+    } else {
+      j++;
+    }
+  }
+}
+
+function addStepMax(oldBlockUploader, newBlockUploader) {
+  for (let i = 0; i < oldBlockUploader.children.length; i++) {
+    let item = oldBlockUploader.children[i];
     if(item.numberElementEqual !== undefined) {
 
-      item.stepProp = ((item.numberElementEqual - stepProp - 1) >= 0) ?item.numberElementEqual - stepProp - 1:0;
-      item.stepFact = ((stepFact - 1) >= 0) ? (stepFact - 1) :0;
-      stepProp = item.numberElementEqual;
-      stepFact = 0;
+      let itemNew =  newBlockUploader.children[item.numberElementEqual];
+      item.stepNextMax = itemNew.count_undefined_prev  - item.count_undefined_prev;
+      item.stepPrevMax = itemNew.count_undefined_next  - item.count_undefined_next;
+
     }
-    stepFact++;
   }
+}
 
-  oldBlockUploader.logger('Выводим св-ва объектов (стврые) (до аналитического перемещения):', 'stepProp', 'stepFact');
-
-  let freeElementNumber = [];
-  for (let [oldUndefinedIndex, oldUndefinedItem]  of oldBlockUploader.children.entries()) {
-    if(oldUndefinedItem.stepProp !== null && oldUndefinedItem.stepFact !== null) {
-      let freeCount = oldUndefinedItem.stepFact - oldUndefinedItem.stepProp
-      if (freeCount > 0) {
-        while (freeCount > 0) {
-          freeElementNumber.push(oldUndefinedIndex - freeCount);
-          freeCount--;
-        }
+function move(oldBlockUploader)
+{
+  for (let i = 0; i < oldBlockUploader.children.length; i++) {
+    let item = oldBlockUploader.children[i];
+    if(item.numberElementEqual !== undefined && item.numberElementEqual > i) {
+      if(
+        i + 1 < oldBlockUploader.children.length &&
+        oldBlockUploader.children[i + 1].numberElementEqual === undefined &&
+        item.stepNextMax > 0 &&
+        item.stepPrevMax < 0
+      ) {
+        oldBlockUploader.move(i, i +1);
+        item.label_move_analytical = true;
+        item.stepNextMax--;
+        item.stepPrevMax++;
+        i=0;
       }
     }
-    stepFact++;
   }
 
-  let correctionIndex = 0;
-
-  if (freeElementNumber.length) {
-    for (let i = 0; i < oldBlockUploader.children.length; i++) {
-      let item = oldBlockUploader.children[i];
-      if(item.stepProp !== null && item.stepFact !== null) {
-        let needCount = item.stepProp - item.stepFact
-        if (needCount > 0) {
-          while (needCount > 0 && freeElementNumber.length) {
-            oldBlockUploader.move(freeElementNumber.shift(), i -1 + correctionIndex);
-            correctionIndex++;
-            needCount--;
-            i++;
-          }
-        }
+  for (let i = 0; i < oldBlockUploader.children.length; i++) {
+    let item = oldBlockUploader.children[i];
+    if(item.numberElementEqual !== undefined  && item.numberElementEqual < i) {
+      if(
+        i -2 >= 0 &&
+        oldBlockUploader.children[i - 1].numberElementEqual === undefined &&
+        item.stepPrevMax > 0 &&
+        item.stepNextMax < 0
+      ) {
+        oldBlockUploader.move(i, i -2);
+        item.label_move_analytical = true;
+        item.stepPrevMax--;
+        item.stepNextMax++;
+        i = 0;
       }
-      stepFact++;
     }
   }
-
-  oldBlockUploader.logger('Выводим св-ва объектов (старые)(после аналитического перемещения):', 'stepProp', 'stepFact');
 }
 

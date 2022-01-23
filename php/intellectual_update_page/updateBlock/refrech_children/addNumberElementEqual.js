@@ -1,27 +1,50 @@
-export function addNumberElementEqual(oldBlockUploader, newBlockUploader) {
-  return _addNumberElementEqual(oldBlockUploader, newBlockUploader);
+export function addNumberElementEqual(_oldBlockUploader, _newBlockUploader) {
+  oldBlockUploader = _oldBlockUploader;
+  newBlockUploader = _newBlockUploader;
+  return _addNumberElementEqual();
 }
 
-function _addNumberElementEqual(oldBlockUploader, newBlockUploader) {
+let oldBlockUploader
+let newBlockUploader
+
+
+function _addNumberElementEqual() {
+  let lastIndex = 0;
   for (let [newIndex, newItem]  of newBlockUploader.children.entries()) {
-    for (let oldItem of oldBlockUploader.children) {
-      if(oldItem.numberElementEqual === undefined) {
-        if (oldItem.node_type === 1 && oldItem.dom_element.isEqualNode(newItem.dom_element)) {
-          oldItem.numberElementEqual = newIndex;
-          newItem.numberElementEqual = newIndex;
-          break;
-        }
-        if (oldItem.node_type !== 1 && oldItem.dom_element.nodeValue === newItem.dom_element.nodeValue) {
-          oldItem.numberElementEqual = newIndex;
-          newItem.numberElementEqual = newIndex;
-          break;
-        }
-      }
+            if (newItem.node_type !== 1) {
+              continue;
+            }
+    let elementOld = getElementOldEqual(newItem, lastIndex);
+    if (!elementOld) {
+      elementOld = getElementOldEqual(newItem, 0); 
+    }
+
+    if (elementOld) {
+      newItem.numberElementEqual = newIndex;
+      elementOld.numberElementEqual = newIndex;
+      lastIndex = newIndex;
     }
   }
 
   oldBlockUploader.logger('Properties of objects (old):');
   newBlockUploader.logger('Properties of objects (new):');
+}
+
+
+function getElementOldEqual(elementNew,startFind = 0) {
+  
+  for (let i = startFind; i < oldBlockUploader.children.length; i++) {
+    let elementOld = oldBlockUploader.children[i];
+    if(elementOld.numberElementEqual === undefined) {
+      if (elementOld.node_type === 1 && elementOld.dom_element.isEqualNode(elementNew.dom_element)) {
+        return elementOld;
+      }
+      if (elementOld.node_type !== 1 && elementOld.dom_element.nodeValue === elementNew.dom_element.nodeValue) {
+        return elementOld;
+      }
+    }
+  }
+  return false;
 }
 
 

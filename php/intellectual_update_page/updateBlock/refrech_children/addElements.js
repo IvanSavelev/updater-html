@@ -16,15 +16,16 @@ function _addElements(oldBlockUploader, newBlockUploader) {
   addStepAndNextNumberElementEqual(oldBlockUploader);
   addStepAndNextNumberElementEqual(newBlockUploader);
 
-  oldBlockUploader.logger('Выводим св-ва объектов (старые)(до добавления):', 'delete', 'label_add', 'stepToNumberElementEqual', 'nextNumberElementEqual');
-  newBlockUploader.logger('Выводим св-ва объектов (новые):', 'stepToNumberElementEqual', 'nextNumberElementEqual');
+  oldBlockUploader.logger('Выводим св-ва объектов (старые)(до добавления):', 'delete', 'label_add', 'stepToNumberElementEqual', 'nextNumberElementEqual', 'stepToNumberElementEqualReverse');
+  newBlockUploader.logger('Выводим св-ва объектов (новые):', 'stepToNumberElementEqual', 'nextNumberElementEqual','stepToNumberElementEqualReverse');
   add(oldBlockUploader, newBlockUploader);
-  oldBlockUploader.logger('Выводим св-ва объектов (старые)(после добавления):', 'delete', 'label_add', 'stepToNumberElementEqual', 'nextNumberElementEqual');
+  oldBlockUploader.logger('Выводим св-ва объектов (старые)(после добавления):', 'delete', 'label_add', 'stepToNumberElementEqual', 'nextNumberElementEqual', 'stepToNumberElementEqualReverse');
 }
 
 function addStepAndNextNumberElementEqual(blockUploader) {
   let children = blockUploader.children;
   let endNumber = 1;
+  let prev = 1;
   for (let i = 0; i < children.length; i++) {
 
     if( children[i].numberElementEqual === undefined) {
@@ -39,12 +40,30 @@ function addStepAndNextNumberElementEqual(blockUploader) {
       }
       //Last block for adding
       if(!isUpdate) {
-        children[i].stepToNumberElementEqual = endNumber; //That reverse number for adding new element in end
+        children[i].stepToNumberElementEqual = children.length - i; //That reverse number for adding new element in end
         children[i].nextNumberElementEqual = undefined;
         endNumber++;
       }
+      children[i].stepToNumberElementEqualReverse=prev;
+      prev++;
+    }
+    if(children[i].numberElementEqual !== undefined) {
+      prev =1;
     }
   }
+  /*
+    let counter = children.length -1;
+    for (let i = children.length -1; i > 0; i--) {
+      if(children[i].numberElementEqual !== undefined) {
+        counter = 0;
+      }
+      if( children[i].numberElementEqual === undefined) {
+        counter++;
+        children[i].stepToNumberElementEqualReverse = i;
+      }
+  
+    }*/
+
 }
 
 /**
@@ -56,26 +75,35 @@ function add(oldBlockUploader, newBlockUploader) {
   let endNumber = 1;
   let oldChildren = oldBlockUploader.children;
   let newChildren = newBlockUploader.children;
-  for (let i = newChildren.length - 1; i > 0; i--) {
-    if(newChildren[i].stepToNumberElementEqual !== undefined) {
+  for (let i = 0; i < newChildren.length; i++) {
+    if(newChildren[i].stepToNumberElementEqualReverse !== undefined && newChildren[i].nextNumberElementEqual !== undefined) {
       if(!oldChildren.find(item => (
-        item.stepToNumberElementEqual === newChildren[i].stepToNumberElementEqual &&
+        item.stepToNumberElementEqualReverse === newChildren[i].stepToNumberElementEqualReverse &&
         item.nextNumberElementEqual === newChildren[i].nextNumberElementEqual))) {
         //Need add
-        if(newChildren[i].nextNumberElementEqual !== undefined) {
-          let indexItem = oldChildren.findIndex(item => item.numberElementEqual === newChildren[i].nextNumberElementEqual);
-          indexItem  = oldChildren.findIndex(item => item.numberElementEqual === newChildren[i].nextNumberElementEqual);
-          addAndAddLabel(oldBlockUploader, indexItem, newChildren[i]);
-        } else {
-          addAndAddLabel(oldBlockUploader, oldChildren.length - endNumber , newChildren[i]);
-          endNumber++;
-        }
 
+        let indexItem = oldChildren.findIndex(item => item.numberElementEqual === newChildren[i].nextNumberElementEqual);
+        addAndAddLabel(oldBlockUploader, indexItem, newChildren[i]);
       }
-
-
     }
   }
+
+  //In end
+  let countElementEndOld = oldChildren.filter(item => item.nextNumberElementEqual === undefined).length;
+  let countElementEndNew = newChildren.filter(item => item.nextNumberElementEqual === undefined).length;
+  let countAddInEnd = countElementEndNew - countElementEndOld
+  let counter = 0;
+  for (let i = newChildren.length -  countAddInEnd; i < newChildren.length; i++) {
+    addAndAddLabelAfter(oldBlockUploader, oldChildren.length - 1, newChildren[i]);
+    counter++;
+  }
+
+}
+
+function addAndAddLabelAfter(old_wsdom, place, new_child) {
+  new_child.label_add = true;
+  new_child.check_add = true;
+  old_wsdom.addAfter(place, new_child);
 }
 
 function addAndAddLabel(old_wsdom, place, new_child) {

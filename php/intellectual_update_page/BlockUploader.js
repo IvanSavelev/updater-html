@@ -8,6 +8,8 @@ export class BlockUploader {
   number_element = null; //Порядковый номер элемента в массиве
   count_undefined_prev = null; //Количество элементов без numberElementEqual после объектом
   count_undefined_next = null; //Количество элементов без numberElementEqual перед объектом
+  stepPrevMax = null;
+  stepNextMax = null;
   stepFact = null;
   stepProp = null;
   prev = null; //Предыдущий элемент с numberElementEqual (ссылка на него)
@@ -15,6 +17,7 @@ export class BlockUploader {
 
   stepToNumberElementEqual = undefined;
   nextNumberElementEqual = undefined;
+  stepToNumberElementEqualReverse = undefined;
   children = []; //Вложенные объекты WSDOM (вложенность совпадает с вложенностью DOM элементов)
   parent = undefined; //Ссылка на родителя
   debug = false; //Свойство, исходя из которого понятно как выводить ошибки
@@ -126,6 +129,27 @@ export class BlockUploader {
     wsdom.dom_element = clone_el_new;
     wsdom.number_element = place;
     children.splice(place, 0, wsdom);
+  }
+
+
+  /**
+   * Добавляет объект WSDOM а так же элемент DOM
+   * @param place {int}
+   * @param new_child {BlockUploader}
+   */
+  addAfter(place, new_child) {
+    let children = this.children;
+    let old_child = children[place];
+    let dom_el_old = old_child.dom_element;
+    let dom_el_new = new_child.dom_element;
+    let clone_el_new = dom_el_new.cloneNode(true);
+    dom_el_old.after(clone_el_new);
+    dom_el_old.after(clone_el_new);
+
+    let wsdom = new_child.clone();
+    wsdom.dom_element = clone_el_new;
+    wsdom.number_element = place;
+    children.splice(place + 1, 0, wsdom);
   }
 
   /**

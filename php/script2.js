@@ -10,6 +10,7 @@ function updateContentWebSocket() {
       console.log(docNew);
       UpdateBlock({
         newDomDocument:docNew,
+        timeCloseBlink:500,
         oldDomDocument:document,
         debug: true
       });

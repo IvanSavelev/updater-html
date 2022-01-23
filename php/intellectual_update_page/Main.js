@@ -207,7 +207,7 @@ function moveStyle(BlockUploader) {
  * The function moves styles to the properties of the object so that they do not interfere with the comparison of elements
  */
 function undoMoveStyle(oldBlockUploader) {
-  if (oldBlockUploader.node_type === 1) {
+  if (oldBlockUploader.dom_element.nodeType === 1) {
     oldBlockUploader.moveStyleInDOM();
     for (let i = 0; i < oldBlockUploader.children.length; i++) {
       undoMoveStyle(oldBlockUploader.children[i]);
