@@ -83,7 +83,7 @@ function add(oldBlockUploader, newBlockUploader) {
         //Need add
 
         let indexItem = oldChildren.findIndex(item => item.numberElementEqual === newChildren[i].nextNumberElementEqual);
-        addAndAddLabel(oldBlockUploader, indexItem, newChildren[i]);
+        addAndAddLabelBefore(oldBlockUploader, indexItem, newChildren[i]);
       }
     }
   }
@@ -101,13 +101,16 @@ function add(oldBlockUploader, newBlockUploader) {
 }
 
 function addAndAddLabelAfter(old_wsdom, place, new_child) {
-  new_child.label_add = true;
-  new_child.check_add = true;
+  addProperty(new_child);
   old_wsdom.addAfter(place, new_child);
 }
 
-function addAndAddLabel(old_wsdom, place, new_child) {
-  new_child.label_add = true;
-  new_child.check_add = true;
+function addAndAddLabelBefore(old_wsdom, place, new_child) {
+  addProperty(new_child);
   old_wsdom.addBefore(place, new_child);
+}
+
+function addProperty(new_child) {
+  new_child.turnOnLabel('add');
+  new_child.isAdd = true;
 }

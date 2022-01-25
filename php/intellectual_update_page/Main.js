@@ -49,7 +49,7 @@ const settingsDefault = {
   classColorFlag: { //Classes for highlighting modified areas (action/class name)
     update_content: 'uploader-update', //Updating content
     move: 'uploader-move', //Moving (swapping elements so that they go in order)
-    move_analytical: 'uploader-move-analytical', //Умное перемещение
+    move_analytical: 'uploader-move-analytical', //Analytical move
     update_attributes: 'uploader-update-attribute', //Smart moving
     add: 'uploader-add', //Adding a new element
     delete: 'uploader-delete', //Delete a element
@@ -194,7 +194,7 @@ function moveStyles(oldBlockUploader, newBlockUploader) {
 
 
 function moveStyle(BlockUploader) {
-  if (BlockUploader.node_type === 1) {
+  if (BlockUploader.domElement.nodeType === 1) {
     BlockUploader.moveStyleInProperty(); //Style moves in property objects
     for (let i = 0; i < BlockUploader.children.length; i++) {
       moveStyle(BlockUploader.children[i]);
@@ -207,7 +207,7 @@ function moveStyle(BlockUploader) {
  * The function moves styles to the properties of the object so that they do not interfere with the comparison of elements
  */
 function undoMoveStyle(oldBlockUploader) {
-  if (oldBlockUploader.dom_element.nodeType === 1) {
+  if (oldBlockUploader.domElement.nodeType === 1) {
     oldBlockUploader.moveStyleInDOM();
     for (let i = 0; i < oldBlockUploader.children.length; i++) {
       undoMoveStyle(oldBlockUploader.children[i]);

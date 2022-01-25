@@ -11,7 +11,7 @@ let newBlockUploader
 function _addNumberElementEqual() {
   let lastIndex = 0;
   for (let [newIndex, newItem]  of newBlockUploader.children.entries()) {
-            if (newItem.node_type !== 1) {
+            if (newItem.domElement.nodeType !== 1) {
               continue;
             }
     let elementOld = getElementOldEqual(newItem, lastIndex);
@@ -36,10 +36,10 @@ function getElementOldEqual(elementNew,startFind = 0) {
   for (let i = startFind; i < oldBlockUploader.children.length; i++) {
     let elementOld = oldBlockUploader.children[i];
     if(elementOld.numberElementEqual === undefined) {
-      if (elementOld.node_type === 1 && elementOld.dom_element.isEqualNode(elementNew.dom_element)) {
+      if (elementOld.domElement.nodeType === 1 && elementOld.domElement.isEqualNode(elementNew.domElement)) {
         return elementOld;
       }
-      if (elementOld.node_type !== 1 && elementOld.dom_element.nodeValue === elementNew.dom_element.nodeValue) {
+      if (elementOld.domElement.nodeType !== 1 && elementOld.domElement.nodeValue === elementNew.domElement.nodeValue) {
         return elementOld;
       }
     }

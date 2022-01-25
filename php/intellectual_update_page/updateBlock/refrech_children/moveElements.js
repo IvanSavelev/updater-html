@@ -21,7 +21,7 @@ function _moveElements(old_wsdom) {
     }
   }
 
-  old_wsdom.logger('Выводим св-ва объектов (стврые) (после перемещения):', 'label_move', 'label_move_analytical');
+ // old_wsdom.logger('Выводим св-ва объектов (стврые) (после перемещения):', 'label_move', 'label_move_analytical');
 }
 
 
@@ -57,8 +57,8 @@ function swap(old_wsdom, i_first, i_next) {
 
 
 function setLabel(wsdom_1) {
-  if (wsdom_1.node_type === 1) {
-    wsdom_1.label_move = true;
+  if (wsdom_1.domElement.nodeType === 1) {
+    wsdom_1.turnOnLabel('move')  //Add a label
   }
 
 }

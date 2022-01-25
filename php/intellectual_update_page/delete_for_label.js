@@ -11,8 +11,8 @@ export function deleteElement(wsdom, settings) {
 function _deleteElement(wsdom, settings) {
   for (let item of wsdom.children) {
     // noinspection JSUnfilteredForInLoop (нужно чтоб phpstorm не ругался)
-    let check_delete = deleteItem(item, settings.timeCloseBlink);
-    if (!check_delete) { //Если уже удалили элемент - то его потомки тоже удалены и дальше лезть нет необходимости
+    let isDelete = deleteItem(item, settings.timeCloseBlink);
+    if (!isDelete) { //Если уже удалили элемент - то его потомки тоже удалены и дальше лезть нет необходимости
       _deleteElement(item, settings);
     }
   }
@@ -26,12 +26,12 @@ function _deleteElement(wsdom, settings) {
  * @returns {boolean}
  */
 function deleteItem(item, timeCloseBlink) {
-  let check_delete = false;
-  if (item.check_delete) {
+  let isDelete = false;
+  if (item.isDelete) {
     setTimeout(function () {
-      item.dom_element.remove();
+      item.domElement.remove();
     }, timeCloseBlink + 100);
-    check_delete = true;
+    isDelete = true;
   }
-  return check_delete;
+  return isDelete;
 }

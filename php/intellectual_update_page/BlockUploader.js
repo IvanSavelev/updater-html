@@ -1,72 +1,87 @@
 export class BlockUploader {
-  numberElementEqual = undefined; //Номер такого же элемента, который является копией
-  check_delete = undefined; //Свойство показывает, что элемент идет на удаление
-  check_add = undefined; //Свойство показывает, что элемент добавлен
-  dom_element = null; //Тут находится DOM элемент, чьей оберткой является объект этого класса
-  node_type = null;  //Тип элемента DOM (тут для удобства)
-  save_style = null; //Стиль объекта (тут временно хранится, для удобства)
-  number_element = null; //Порядковый номер элемента в массиве
-  count_undefined_prev = null; //Количество элементов без numberElementEqual после объектом
-  count_undefined_next = null; //Количество элементов без numberElementEqual перед объектом
+  numberElementEqual = undefined; //The number of the same element that is a copy
+  isDelete = undefined; //The property indicates that the item is going to be deleted
+  isAdd = undefined; //The property shows that the element has been added
+  domElement = null; //There is a DOM element whose wrapper is an object of this class
+  saveStyle = null; //The style of the object (temporarily stored here, for convenience)
+  countUndefinedPrev = null; //The count of elements without numberElementEqual prev the object
+  countUndefinedNext = null; //The count of elements without numberElementEqual next the object
+  
+  //For moveElementsAnalytical
   stepPrevMax = null;
   stepNextMax = null;
-  stepFact = null;
-  stepProp = null;
-  prev = null; //Предыдущий элемент с numberElementEqual (ссылка на него)
-  next = null; //Следующий элемент с numberElementEqual (ссылка на него)
 
+  //For add
   stepToNumberElementEqual = undefined;
   nextNumberElementEqual = undefined;
   stepToNumberElementEqualReverse = undefined;
-  children = []; //Вложенные объекты WSDOM (вложенность совпадает с вложенностью DOM элементов)
-  parent = undefined; //Ссылка на родителя
-  debug = false; //Свойство, исходя из которого понятно как выводить ошибки
+  
+  children = []; //The children BlockUploader objects (nesting coincides with the nesting of DOM elements)
+  debug = false; //A property based on which it is clear how to output errors
+  
+  //A block of labels for adding classes
+  label =
+    {
+      update_tag: undefined, 
+      update_type: undefined, 
+      update_attributes: undefined,
+      move: undefined,
+      move_analytical: undefined,
+      delete: undefined,
+      add: undefined,
+      update_content: undefined
+    }
 
-
-  label_update_tag = undefined; //Блок меток для добавления классов
-  label_update_type = undefined; //Блок меток для добавления классов
-  label_update_attributes = undefined; //Блок меток для добавления классов
-  label_move = undefined; //Блок меток для добавления классов
-  label_move_analytical = undefined; //Блок меток для добавления классов
-  label_delete = undefined; //Блок меток для добавления классов
-  label_add = undefined; //Блок меток для добавления классов
-  label_update_content = undefined; //Блок меток для добавления классов
-
-  constructor(dom_element) {
+  constructor(domElement) {
     Object.seal(this);
-    this.dom_element = dom_element;
-    this.node_type = dom_element.nodeType;
+    this.domElement = domElement;
+  }
+  
+  turnOnLabel(nameLabel)
+  {
+    this.label[nameLabel] = true;
+  }
+  
+  getTurnOnLabelList() {
+    let labelList = [];
+    for (let key in this.label) {
+      if(this.label[key] !== undefined) {
+        labelList.push(key);
+      }
+    }
+    return labelList;
   }
 
 
   /**
-   * Функция перемещает стиль DOM в свойство объекта save_style, чтоб он не мешал при сравнении элементов
+   * The function moves the DOM style to the saveStyle object property 
+   * so that it does not interfere when comparing elements
    */
   moveStyleInProperty() {
-    if (this.dom_element.hasAttribute('style')) {
-      this.save_style = this.dom_element.getAttribute('style');
-      this.dom_element.removeAttribute('style');
+    if (this.domElement.hasAttribute('style')) {
+      this.saveStyle = this.domElement.getAttribute('style');
+      this.domElement.removeAttribute('style');
     }
   }
 
 
   /**
-   * Перемещение стиля в свойства  DOM объекта
+   * Moving a style to the properties of a DOM object
    */
   moveStyleInDOM() {
-    if (this.dom_element.hasAttribute('style')) {
-      this.save_style = this.dom_element.getAttribute('style');
-      this.dom_element.removeAttribute('style');
+    if (this.domElement.hasAttribute('style')) {
+      this.saveStyle = this.domElement.getAttribute('style');
+      this.domElement.removeAttribute('style');
     }
   }
 
 
   /**
-   * Создает клон объекта
-   * @returns {BlockUploader} - возвращает клон
+   * Creates a clone of an object
+   * @returns {BlockUploader} - returns a clone
    */
   clone() {
-    let copy = new BlockUploader(this.dom_element);
+    let copy = new BlockUploader(this.domElement);
     for (let attr in this) {
       if (this.hasOwnProperty(attr)) copy[attr] = this[attr];
     }
@@ -75,102 +90,89 @@ export class BlockUploader {
 
 
   /**
-   * Перемещает объект WSDOM а так же элемент DOM
-   * @param i_old_place {int}
-   * @param i_new_place {int}
+   * Moves the BlockUploader object as well as the DOM element
+   * @param oldPlace {int}
+   * @param newPlace {int}
    */
-  move(i_old_place, i_new_place) {
+  move(oldPlace, newPlace) {
     let children = this.children;
-    let dom_el_old = children[i_old_place].dom_element;
-    let dom_el_new = children[i_new_place].dom_element;
-    dom_el_new.after(dom_el_old);
-    children.splice(i_new_place + 1, 0, children[i_old_place]);
-    if (i_new_place < i_old_place) {
-      i_old_place++;  //Назад
+    let domOld = children[oldPlace].domElement;
+    let domNew = children[newPlace].domElement;
+    domNew.after(domOld);
+    children.splice(newPlace + 1, 0, children[oldPlace]);
+    if (newPlace < oldPlace) {
+      oldPlace++;  //Prev
     }
-    children.splice(i_old_place, 1);
+    children.splice(oldPlace, 1);
   }
 
 
   /**
-   * Добавляет объект WSDOM а так же элемент DOM
+   * Adds a BlockUploader object as well as a DOM element
    * @param place {int}
-   * @param new_child {BlockUploader}
+   * @param blockUploaderNew {BlockUploader}
+   * @param type - type operation
    */
-  add(place, new_child) {
+  add(place, blockUploaderNew, type = 'after') {
     let children = this.children;
-    let old_child = children[place];
-    let dom_el_old = old_child.dom_element;
-    let dom_el_new = new_child.dom_element;
-    let clone_el_new = dom_el_new.cloneNode(true);
-    dom_el_old.after(clone_el_new);
-
-    let wsdom = new_child.clone();
-    wsdom.dom_element = clone_el_new;
-    wsdom.number_element = place + 1;
-    children.splice(place + 1, 0, wsdom);
+    let blockOld = children[place];
+    let domOld = blockOld.domElement;
+    let domNew = blockUploaderNew.domElement;
+    let cloneDomNew = domNew.cloneNode(true);
+    if(type === 'before') {
+      domOld.before(cloneDomNew);
+    } 
+    if (type === 'after') {
+      domOld.after(cloneDomNew);
+    }
+    
+    let blockUploaderCloneNew = blockUploaderNew.clone();
+    blockUploaderCloneNew.domElement = cloneDomNew;
+    if (type === 'after') {
+      place++;
+    }
+    children.splice(place, 0, blockUploaderCloneNew);
   }
 
+  
   /**
-   * Добавляет объект WSDOM а так же элемент DOM
+   * Adds a BlockUploader object as well as a DOM element before
    * @param place {int}
-   * @param new_child {BlockUploader}
+   * @param blockUploaderNew {BlockUploader}
    */
-  addBefore(place, new_child) {
-    let children = this.children;
-    let old_child = children[place];
-    let dom_el_old = old_child.dom_element;
-    let dom_el_new = new_child.dom_element;
-    let clone_el_new = dom_el_new.cloneNode(true);
-    dom_el_old.before(clone_el_new);
-    dom_el_old.before(clone_el_new);
-
-    let wsdom = new_child.clone();
-    wsdom.dom_element = clone_el_new;
-    wsdom.number_element = place;
-    children.splice(place, 0, wsdom);
+  addBefore(place, blockUploaderNew) {
+    this.add(place, blockUploaderNew, 'before')
   }
 
 
   /**
-   * Добавляет объект WSDOM а так же элемент DOM
+   * Adds a BlockUploader object as well as a DOM element after
    * @param place {int}
-   * @param new_child {BlockUploader}
+   * @param blockUploaderNew {BlockUploader}
    */
-  addAfter(place, new_child) {
-    let children = this.children;
-    let old_child = children[place];
-    let dom_el_old = old_child.dom_element;
-    let dom_el_new = new_child.dom_element;
-    let clone_el_new = dom_el_new.cloneNode(true);
-    dom_el_old.after(clone_el_new);
-    dom_el_old.after(clone_el_new);
-
-    let wsdom = new_child.clone();
-    wsdom.dom_element = clone_el_new;
-    wsdom.number_element = place;
-    children.splice(place + 1, 0, wsdom);
+  addAfter(place, blockUploaderNew) {
+    this.add(place, blockUploaderNew, 'after')
   }
 
   /**
-   * Выводит в консоль состояние WSDOM элементов
-   * @param name_log {string} - название отображаемое перед выводом
-   * @param show_parametr - свойства которые надо вывести дополнительно
+   * Outputs the status of BlockUploader elements to the console
+   * @param nameLog {string} - name log`s
+   * @param showParametr - adding property
    */
-  logger(name_log, ...show_parametr) {
+  logger(nameLog, ...showParametr) {
     if (this.debug === true) {
       console.log('\n');
-      console.log(name_log);
+      console.log(nameLog);
       let i = 0;
       for (let item of this.children) {
-        let show_parametr_text = '';
-        for (let parametr of show_parametr) {
+        let showParametrText = '';
+        for (let parametr of showParametr) {
           if (item[parametr] !== undefined) {
-            show_parametr_text = show_parametr_text + ' ' + parametr + ':' + item[parametr] + ' ';
+            showParametrText = showParametrText + ' ' + parametr + ':' + item[parametr] + ' ';
           }
         }
-        let textContent = (item.node_type === 3) ? '' : item.dom_element.textContent;
-        console.log(i + ' тип элемента "' + item.dom_element.tagName + '" контент:"' + textContent + '" nee: ' + item.numberElementEqual + show_parametr_text);
+        let textContent = (item.domElement.nodeType === 3) ? '' : item.domElement.textContent;
+        console.log(i + ' type "' + item.domElement.tagName + '" content:"' + textContent + '" nee: ' + item.numberElementEqual + showParametrText);
         i++;
       }
       console.log('\n');
@@ -179,23 +181,23 @@ export class BlockUploader {
 
 
   /**
-   * Выводит в консоль состояние DOM элементов
-   * @param name_log {string} - название отображаемое перед выводом
-   * @param show_parametr - свойства которые надо вывести дополнительно
+   * Outputs the state of DOM elements to the console
+   * @param nameLog {string} - name log`s
+   * @param showParametr - adding property
    */
-  loggerDOM(name_log, ...show_parametr) {
+  loggerDOM(nameLog, ...showParametr) {
     if (this.debug === true) {
       console.log('\n');
-      console.log(name_log);
+      console.log(nameLog);
       let i = 0;
-      for (let item of this.dom_element.childNodes) {
-        let show_parametr_text = '';
-        for (let parametr of show_parametr) {
+      for (let item of this.domElement.childNodes) {
+        let showParametrText = '';
+        for (let parametr of showParametr) {
           if (item[parametr] !== undefined) {
-            show_parametr_text = show_parametr_text + ' ' + parametr + ':' + item[parametr] + ' ';
+            showParametrText = showParametrText + ' ' + parametr + ':' + item[parametr] + ' ';
           }
         }
-        console.log(i + ' тип элемента "' + item.tagName + '" ' + item.textContent + ' : ' + show_parametr_text);
+        console.log(i + ' type "' + item.tagName + '" ' + item.textContent + ' : ' + showParametrText);
       }
       console.log('\n');
     }

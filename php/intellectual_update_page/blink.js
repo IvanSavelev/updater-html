@@ -22,8 +22,6 @@ function _blink(wsdom, settings) {
  */
 function showBlink(wsdom, settings) {
   showBlinkSingle(wsdom, settings);
-
-
     for (let i = 0; i < wsdom.children.length; i++) {
       showBlink(wsdom.children[i], settings);
     }
@@ -34,29 +32,24 @@ function showBlink(wsdom, settings) {
    * @param settings - настройки модуля
    */
   function showBlinkSingle(wsdom, settings) {
-    let object;
-    for (let key in settings.classColorFlag) {
-      if (wsdom['label_' + key]) {
-        object = wsdom.node_type === 1 ? wsdom.dom_element : wsdom.dom_element.parentElement;
-        object = wsdom.dom_element;
-        // noinspection JSUnfilteredForInLoop (нужно чтоб phpstorm не ругался)
-        addClass(object, settings.classColorFlag[key], 'all'); //Подсвечиваем изменения
-      }
-    }
+    const labelList = wsdom.getTurnOnLabelList();
+    labelList.forEach((item) => {
+      addClass(wsdom.domElement, settings.classColorFlag[item], 'all'); //Подсвечиваем изменения
+    });
   }
 
   /**
    * Помечаем классом все элементы, в том числе и вложенные
-   * old_dom_element {WSDOM} - элемент к которому применяется класс
+   * old_domElement {WSDOM} - элемент к которому применяется класс
    * class_name string - имя класса
    * type - all - применяется класс к элементу, и всем вложенным в него элементам
    */
-  function addClass(old_dom_element, class_name, type) {
-    if (old_dom_element.nodeType === 1) {
-      old_dom_element.classList.add(class_name);
+  function addClass(old_domElement, class_name, type) {
+    if (old_domElement.nodeType === 1) {
+      old_domElement.classList.add(class_name);
       /*if(type === 'all') { //TODO Может нужно в таблицах
-        let old_dom_element_children = old_dom_element.children;
-        for (let i = 0, child; child = old_dom_element_children[i]; i++) {
+        let old_domElement_children = old_domElement.children;
+        for (let i = 0, child; child = old_domElement_children[i]; i++) {
           blink(child, class_name, type);
         }
       }*/
@@ -82,12 +75,10 @@ function closeBlink(wsdom, settings) {
    * @param item {WSDOM}
    */
   function closeBlinkItem(item) {
-    for (let key in settings.classColorFlag) {
-      if (item['label_' + key]) {
-        // noinspection JSUnfilteredForInLoop
-        closeClassBlink(item, settings.classColorFlag[key], settings.timeCloseBlink);
-      }
-    }
+    const labelList = item.getTurnOnLabelList();
+    labelList.forEach((label) => {
+      closeClassBlink(item, settings.classColorFlag[label], settings.timeCloseBlink); 
+    });
   }
 
   /**
@@ -98,9 +89,9 @@ function closeBlink(wsdom, settings) {
    */
   function closeClassBlink(item, name_class, timeCloseBlink) {
     setTimeout(function () { //Удаляем классы подсветки измененых областей
-      let dom_element = item.dom_element;
-      if (dom_element.classList) {
-        dom_element.classList.remove(name_class);
+      let domElement = item.domElement;
+      if (domElement.classList) {
+        domElement.classList.remove(name_class);
       }
     }, timeCloseBlink);
   }

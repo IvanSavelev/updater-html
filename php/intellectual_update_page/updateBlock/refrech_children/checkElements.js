@@ -16,16 +16,16 @@ function _checkElements(old_wsdom, new_wsdom) {
   let new_children = new_wsdom.children;
   let count_delete = 0;
   for (let i = 0; i < old_children.length; i++) {
-    if (old_children[i].check_delete === true) {
+    if (old_children[i].isDelete === true) {
       count_delete++; //Считаем количество элементов на удаление
       continue;
     }
     if (old_children[i].numberElementEqual) {
-      let new_child = new_children[old_children[i].numberElementEqual].dom_element;
+      let new_child = new_children[old_children[i].numberElementEqual].domElement;
       if (!new_child) {
         showError('No compliance!');
       }
-      if (!old_children[i].dom_element.isEqualNode(new_child)) {
+      if (!old_children[i].domElement.isEqualNode(new_child)) {
         showError('No equal!');
       }
     }

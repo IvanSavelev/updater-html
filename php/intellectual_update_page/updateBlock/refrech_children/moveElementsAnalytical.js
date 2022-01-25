@@ -1,3 +1,4 @@
+import {addInfoWSDOM} from "./helpers/addInfoWSDOM.js";
 
 
 export function moveElementsAnalytical(oldBlockUploader, newBlockUploader) {
@@ -10,13 +11,12 @@ export function moveElementsAnalytical(oldBlockUploader, newBlockUploader) {
  */
 function _moveElementsAnalytical(oldBlockUploader, newBlockUploader) {
 
-  addProperty(oldBlockUploader);
-  addProperty(newBlockUploader);
+  addInfoWSDOM(oldBlockUploader, newBlockUploader);
   addStepMax(oldBlockUploader, newBlockUploader);
   move(oldBlockUploader);
   
-  newBlockUploader.logger('Выводим св-ва объектов (новые)(до аналитического перемещения):', 'count_undefined_prev', 'count_undefined_next');
-  oldBlockUploader.logger('Выводим св-ва объектов (старые)(до аналитического перемещения):', 'count_undefined_prev', 'count_undefined_next');
+  newBlockUploader.logger('Выводим св-ва объектов (новые)(до аналитического перемещения):', 'countUndefinedPrev', 'countUndefinedNext');
+  oldBlockUploader.logger('Выводим св-ва объектов (старые)(до аналитического перемещения):', 'countUndefinedPrev', 'countUndefinedNext');
   
   
   
@@ -30,33 +30,6 @@ function _moveElementsAnalytical(oldBlockUploader, newBlockUploader) {
 }
 
 
-function addProperty(newBlockUploader)
-{
-  let j = 0;
-  for (let i = 0; i < newBlockUploader.children.length; i++) {
-
-    let item = newBlockUploader.children[i];
-    if(item.numberElementEqual !== undefined) {
-      item.count_undefined_prev = j;
-      j = 0;
-    } else {
-      j++;
-    }
-
-  }
-
-  j =0;
-  for (let i = newBlockUploader.children.length - 1; i > 0; i--) {
-
-    let item = newBlockUploader.children[i];
-    if(item.numberElementEqual !== undefined) {
-      item.count_undefined_next = j;
-      j = 0;
-    } else {
-      j++;
-    }
-  }
-}
 
 function addStepMax(oldBlockUploader, newBlockUploader) {
   for (let i = 0; i < oldBlockUploader.children.length; i++) {
@@ -64,8 +37,8 @@ function addStepMax(oldBlockUploader, newBlockUploader) {
     if(item.numberElementEqual !== undefined) {
 
       let itemNew =  newBlockUploader.children[item.numberElementEqual];
-      item.stepNextMax = itemNew.count_undefined_prev  - item.count_undefined_prev;
-      item.stepPrevMax = itemNew.count_undefined_next  - item.count_undefined_next;
+      item.stepNextMax = itemNew.countUndefinedPrev  - item.countUndefinedPrev;
+      item.stepPrevMax = itemNew.countUndefinedNext  - item.countUndefinedNext;
 
     }
   }
@@ -83,7 +56,7 @@ function move(oldBlockUploader)
         item.stepPrevMax < 0
       ) {
         oldBlockUploader.move(i, i +1);
-        item.label_move_analytical = true;
+        item.turnOnLabel('move_analytical')  //Add a label
         item.stepNextMax--;
         item.stepPrevMax++;
         i=0;
@@ -101,7 +74,8 @@ function move(oldBlockUploader)
         item.stepNextMax < 0
       ) {
         oldBlockUploader.move(i, i -2);
-        item.label_move_analytical = true;
+        item.turnOnLabel('move_analytical')  //Add a label
+        
         item.stepPrevMax--;
         item.stepNextMax++;
         i = 0;

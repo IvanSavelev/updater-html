@@ -12,8 +12,8 @@ function _updateAttribute(oldBlockUploader, newBlockUploader) {
 
 function checkUpdate(oldBlockUploader, newBlockUploader) {
 
-  let oldAttributes = oldBlockUploader.dom_element.attributes;
-  let newAttributes = newBlockUploader.dom_element.attributes;
+  let oldAttributes = oldBlockUploader.domElement.attributes;
+  let newAttributes = newBlockUploader.domElement.attributes;
 
 
   if (oldAttributes.length !== newAttributes.length) {
@@ -37,16 +37,16 @@ function checkUpdate(oldBlockUploader, newBlockUploader) {
 }
 
 function update(oldBlockUploader, newBlockUploader) {
-  let oldAttributes = oldBlockUploader.dom_element.attributes;
-  let newAttributes = newBlockUploader.dom_element.attributes;
+  let oldAttributes = oldBlockUploader.domElement.attributes;
+  let newAttributes = newBlockUploader.domElement.attributes;
 
   //Remove old
   while (oldAttributes.length > 0) {
-    oldBlockUploader.dom_element.removeAttribute(oldAttributes[0].name);
+    oldBlockUploader.domElement.removeAttribute(oldAttributes[0].name);
   }
   //Paste new
   for (let i = 0; i < newAttributes.length; i++) {
-    oldBlockUploader.dom_element.setAttribute(newAttributes[i].name, newAttributes[i].value);
+    oldBlockUploader.domElement.setAttribute(newAttributes[i].name, newAttributes[i].value);
   }
-  oldBlockUploader.label_update_attributes = true;
+  oldBlockUploader.turnOnLabel('update_attributes')
 }

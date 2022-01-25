@@ -14,7 +14,7 @@ function _deleteElements(old_wsdom, new_wsdom) {
   addInfoWSDOM(old_wsdom, new_wsdom);
   let amendment_delete = deleteMiddle(new_wsdom, old_wsdom);
   deleteEnd(new_wsdom, old_wsdom, amendment_delete);
-  old_wsdom.logger('Выводим св-ва объектов (старые)(после удаления):', 'label_delete');
+ // old_wsdom.logger('Выводим св-ва объектов (старые)(после удаления):', 'label_delete');
 }
 
 
@@ -31,7 +31,7 @@ function deleteMiddle(new_wsdom, old_wsdom) {
     let old_child = children[i];
     if (old_child.numberElementEqual !== undefined) {
       let new_child = new_wsdom.children[old_child.numberElementEqual];
-      let modal = old_child.count_undefined_prev - new_child.count_undefined_prev;
+      let modal = old_child.countUndefinedPrev - new_child.countUndefinedPrev;
       if (modal) {
         for (let i_sub = 0; i_sub < modal; i_sub++) {
           deleteAndAddLabel(children[i - i_sub - 1]);
@@ -62,8 +62,8 @@ function deleteEnd(new_wsdom, old_wsdom, amendment_delete) {
  * @param wsdom {WSDOM}
  */
 function deleteAndAddLabel(wsdom) {
-  wsdom.label_delete = true;
-  wsdom.check_delete = true;
+  wsdom.turnOnLabel('delete')  //Add a label
+  wsdom.isDelete = true;
 }
 
 
@@ -87,7 +87,7 @@ function getCountDeleteEnd(new_wsdom, old_wsdom) {
     let children = wsdom.children;
     for (let i = children.length - 1; i > 0; i--) {
       if (children[i].numberElementEqual !== undefined) {
-        return children[i].count_undefined_next;
+        return children[i].countUndefinedNext;
       }
     }
     return wsdom.children.length;
