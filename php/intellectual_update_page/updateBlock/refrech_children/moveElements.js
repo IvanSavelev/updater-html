@@ -1,32 +1,36 @@
-export function moveElements(old_wsdom) {
-  return _moveElements(old_wsdom);
+export function moveElements(_BlockUploaderOld) {
+  BlockUploaderOld = _BlockUploaderOld;
+  return _moveElements(BlockUploaderOld);
 }
+
+let BlockUploaderOld
 
 
 /**
- * Перемещаем элементы, чтоб они шли в правильной последовательностии (меняем местами, так чтобы они от меньшегоб к большему шли, по numberElementEqual)
+ * Moving the elements so that they go in the correct sequence (swapping them so that they go from smaller to larger, according to numberElementEqual)
  */
-function _moveElements(old_wsdom) {
-  let children = old_wsdom.children;
+function _moveElements() {
+  let children = BlockUploaderOld.children;
   for (let i = 0; i < children.length; i++) {
     if (children[i].numberElementEqual === undefined) {
       continue;
     }
     let i_up = compare(i, children);
     if (i_up !== null) {
-      swap(old_wsdom, i, i_up);
+      swap(BlockUploaderOld, i, i_up);
       setLabel(children[i]);
       setLabel(children[i_up]);
-      i--; //Снова начинаем поиск
+      i--; //Starting the search again
     }
   }
 
- // old_wsdom.logger('Выводим св-ва объектов (стврые) (после перемещения):', 'label_move', 'label_move_analytical');
+  BlockUploaderOld.logger('We output a list of objects (old) (after moving):', );
 }
 
 
 /**
- * Если впереди находит элемент с меньшим numberElementEqual, то возвращает индекс элемента, котрый надо поменять местами
+ * If an element with a smaller numberElementEqual is found in front, it returns
+ * the index of the element that needs to be swapped
  * @param startPlace
  * @param children
  * @returns
@@ -48,11 +52,11 @@ function compare(startPlace, children) {
 
 
 /**
- * Меняем местами
+ * Changes places
  */
-function swap(old_wsdom, i_first, i_next) {
-  old_wsdom.move(i_next, i_first);
-  old_wsdom.move(i_first, i_next);
+function swap(BlockUploaderOld, first, next) {
+  BlockUploaderOld.move(next, first);
+  BlockUploaderOld.move(first, next);
 }
 
 

@@ -17,11 +17,11 @@ function _addInfoWSDOM(old_wsdom, new_wsdom) {
  * Добавляем/обновляем информацю для детей объектов
  * @param wsdom {WSDOM}
  */
-function addInfo(newBlockUploader) {
+function addInfo(BlockUploaderNew) {
   let j = 0;
-  for (let i = 0; i < newBlockUploader.children.length; i++) {
+  for (let i = 0; i < BlockUploaderNew.children.length; i++) {
 
-    let item = newBlockUploader.children[i];
+    let item = BlockUploaderNew.children[i];
     if(item.numberElementEqual !== undefined) {
       item.countUndefinedPrev = j;
       j = 0;
@@ -32,9 +32,9 @@ function addInfo(newBlockUploader) {
   }
 
   j =0;
-  for (let i = newBlockUploader.children.length - 1; i > 0; i--) {
+  for (let i = BlockUploaderNew.children.length - 1; i > 0; i--) {
 
-    let item = newBlockUploader.children[i];
+    let item = BlockUploaderNew.children[i];
     if(item.numberElementEqual !== undefined) {
       item.countUndefinedNext = j;
       j = 0;

@@ -1,95 +1,91 @@
 import {addInfoWSDOM} from "./helpers/addInfoWSDOM.js";
 
-export function deleteElements(old_wsdom, new_wsdom) {
-  return _deleteElements(old_wsdom, new_wsdom);
+export function deleteElements(_BlockUploaderOld, _BlockUploaderNew) {
+  BlockUploaderOld = _BlockUploaderOld;
+  BlockUploaderNew = _BlockUploaderNew;
+  return _deleteElements();
+}
+
+let BlockUploaderOld
+let BlockUploaderNew
+
+
+/**
+ * Removes elements
+ */
+function _deleteElements() {
+  addInfoWSDOM(BlockUploaderOld, BlockUploaderNew);
+  let amendmentDelete = deleteMiddle();
+  deleteEnd(amendmentDelete);
+  
+  BlockUploaderOld.logger('The properties of objects (old)(after deletion):', );
 }
 
 
 /**
- * Удаляет элементы
- * @param old_wsdom
- * @param new_wsdom
+ * Deletes in the middle
+ * @returns {number} count elements for delete
  */
-function _deleteElements(old_wsdom, new_wsdom) {
-  addInfoWSDOM(old_wsdom, new_wsdom);
-  let amendment_delete = deleteMiddle(new_wsdom, old_wsdom);
-  deleteEnd(new_wsdom, old_wsdom, amendment_delete);
- // old_wsdom.logger('Выводим св-ва объектов (старые)(после удаления):', 'label_delete');
-}
-
-
-/**
- * Удаляет в середине
- * @param new_wsdom {WSDOM}
- * @param old_wsdom {WSDOM}
- * @returns {number} количество элементов отмеченное на удаление
- */
-function deleteMiddle(new_wsdom, old_wsdom) {
-  let children = old_wsdom.children;
-  let amendment_delete = 0;
+function deleteMiddle() {
+  let children = BlockUploaderOld.children;
+  let amendmentDelete = 0;
   for (let i = 0; i < children.length; i++) {
-    let old_child = children[i];
-    if (old_child.numberElementEqual !== undefined) {
-      let new_child = new_wsdom.children[old_child.numberElementEqual];
-      let modal = old_child.countUndefinedPrev - new_child.countUndefinedPrev;
+    let childOld = children[i];
+    if (childOld.numberElementEqual !== undefined) {
+      let childNew = BlockUploaderNew.children[childOld.numberElementEqual];
+      let modal = childOld.countUndefinedPrev - childNew.countUndefinedPrev;
       if (modal) {
-        for (let i_sub = 0; i_sub < modal; i_sub++) {
-          deleteAndAddLabel(children[i - i_sub - 1]);
-          amendment_delete++;
+        for (let j = 0; j < modal; j++) {
+          deleteAndAddLabel(children[i - j - 1]);
+          amendmentDelete++;
         }
       }
     }
   }
-  return amendment_delete;
+  return amendmentDelete;
 }
 
 /**
- * Удаляет элементы в конце
- * @param new_wsdom {WSDOM}
- * @param old_wsdom {WSDOM}
- * @param amendment_delete количество элементов отмеченное на удаление, нужно чтобы их при сравнении не учитывать
+ * Removes elements at the end
+ * @param amendmentDelete - the number of elements marked for deletion, it is necessary that they are not taken into account when comparing
  */
-function deleteEnd(new_wsdom, old_wsdom, amendment_delete) {
-  let old_children = old_wsdom.children;
-  let count_delete = getCountDeleteEnd(new_wsdom, old_wsdom);
-  for (let i = 0; i < count_delete; i++) {
-    deleteAndAddLabel(old_children[old_children.length - 1 - i]);
+function deleteEnd(amendmentDelete) {
+  let childrenOld = BlockUploaderOld.children;
+  let countDelete = getCountDeleteEnd();
+  for (let i = 0; i < countDelete; i++) {
+    deleteAndAddLabel(childrenOld[childrenOld.length - 1 - i]);
   }
 }
 
 /**
- * Помечает элемент удаленным и меткой
- * @param wsdom {WSDOM}
+ * Marks an item with a deleted label
  */
-function deleteAndAddLabel(wsdom) {
-  wsdom.turnOnLabel('delete')  //Add a label
-  wsdom.isDelete = true;
+function deleteAndAddLabel(blockUpdater) {
+  blockUpdater.turnOnLabel('delete')
+  blockUpdater.isDelete = true;
 }
 
 
 /**
- * Возвращает количество элементов в old_wsdom, которое надо удалить
- * @param new_wsdom {WSDOM}
- * @param old_wsdom {WSDOM}
+ * Возвращает количество элементов в BlockUploaderOld, которое надо удалить
  * @returns {number}
  */
-function getCountDeleteEnd(new_wsdom, old_wsdom) {
-  let new_count_last = getCountLastEl(new_wsdom);
-  let old_count_last = getCountLastEl(old_wsdom);
+function getCountDeleteEnd() {
+  let new_count_last = getCountLastEl(BlockUploaderNew);
+  let old_count_last = getCountLastEl(BlockUploaderOld);
   return old_count_last - new_count_last;
 
   /**
    * Возвращает количество последних элементов, после последнего элемента с numberElementEqual
-   * @param wsdom
    * @returns {number}
    */
-  function getCountLastEl(wsdom) {
-    let children = wsdom.children;
+  function getCountLastEl(blockUploader) {
+    let children = blockUploader.children;
     for (let i = children.length - 1; i > 0; i--) {
       if (children[i].numberElementEqual !== undefined) {
         return children[i].countUndefinedNext;
       }
     }
-    return wsdom.children.length;
+    return blockUploader.children.length;
   }
 }

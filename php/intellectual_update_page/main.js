@@ -1,13 +1,14 @@
 import {updateBlock} from './updateBlock/updateBlock.js';
 import {BlockUploader} from './BlockUploader.js';
-import {deleteElement} from './delete_for_label.js';
-import {blink} from './blink.js';
+import {addClass} from './addClass.js';
+import {deleteDOMmarked} from "./deleteDOMmarked.js";
+import {deleteClass} from "./deleteClass.js";
 
 let settings = {}
 let oldDomNodeList = {}
 let newDomNodeList = {}
-let oldBlockUploaderList = []
-let newBlockUploaderList = []
+let BlockUploaderOldList = []
+let BlockUploaderNewList = []
 
 export function UpdateBlock(_settings) {
   settings = Object.assign({}, settingsDefault, _settings);
@@ -71,7 +72,11 @@ function checkDomNodeList() {
   for (let i = 0; i < oldDomNodeList.length; ++i) {
     let attribute = oldDomNodeList[i].getAttribute(settings.querySelector);
     if (!isBlockUpdaterEqual(attribute)) {
-      throw new Error("Updater: blocks updater arent equal (no block " + oldDomNodeList[i].getAttribute(settings.querySelector) + ") !");
+      throw new Error(
+        "Updater: blocks updater arent equal (no block " + 
+        oldDomNodeList[i].getAttribute(settings.querySelector) + 
+        ") !"
+      );
     }
   }
 
@@ -85,7 +90,11 @@ function checkDomNodeList() {
   for (let i = 0; i < oldDomNodeList.length; ++i) {
     let attribute = oldDomNodeList[i].getAttribute(settings.querySelector);
     if (!isBlockUpdaterEqual(attribute)) {
-      throw new Error("Updater: blocks new and old updater arent equal for name (no block " + oldDomNodeList[i].getAttribute(settings.querySelector) + ") !");
+      throw new Error(
+        "Updater: blocks new and old updater arent equal for name (no block " + 
+        oldDomNodeList[i].getAttribute(settings.querySelector) + 
+        ") !"
+      );
     }
   }
 
@@ -122,16 +131,16 @@ function preparationDomNodeList() {
 
 
 function setBlockUploaderList() {
-  oldBlockUploaderList = [];
-  newBlockUploaderList = [];
+  BlockUploaderOldList = [];
+  BlockUploaderNewList = [];
   for (let i = 0; i < oldDomNodeList.length; i++) {
     const oldBlock = oldDomNodeList[i];
     const newBlock = getNewBlockForName(oldBlock.getAttribute(settings.querySelector));
 
-    let oldBlockUploader = createUploaderBlock(oldBlock); //Creates an array of wrapper objects for the DOM object
-    let newBlockUploader = createUploaderBlock(newBlock);
-    oldBlockUploaderList.push(oldBlockUploader);
-    newBlockUploaderList.push(newBlockUploader);
+    let BlockUploaderOld = createUploaderBlock(oldBlock); //Creates an array of wrapper objects for the DOM object
+    let BlockUploaderNew = createUploaderBlock(newBlock);
+    BlockUploaderOldList.push(BlockUploaderOld);
+    BlockUploaderNewList.push(BlockUploaderNew);
   }
 }
 
@@ -146,22 +155,24 @@ function getNewBlockForName(name) {
 
 
 function updateContent() {
-  for (let i = 0; i < oldBlockUploaderList.length; i++) {
-    moveStyles(oldBlockUploaderList[i], newBlockUploaderList[i]);
-    updateOldBlock(oldBlockUploaderList[i], newBlockUploaderList[i]);
-    undoMoveStyle(oldBlockUploaderList[i]);
+  for (let i = 0; i < BlockUploaderOldList.length; i++) {
+    moveStyles(BlockUploaderOldList[i], BlockUploaderNewList[i]);
+    updateOldBlock(BlockUploaderOldList[i], BlockUploaderNewList[i]);
+    undoMoveStyle(BlockUploaderOldList[i]);
   }
 }
 
-function updateOldBlock(oldBlockUploader, newBlockUploader) {
-  updateBlock(oldBlockUploader, newBlockUploader);
+function updateOldBlock(BlockUploaderOld, BlockUploaderNew) {
+  updateBlock(BlockUploaderOld, BlockUploaderNew);
 }
 
 
 function finishSteps() {
-  for (let i = 0; i < oldBlockUploaderList.length; i++) {
-    blink(oldBlockUploaderList[i], settings); // The function checks the properties of objects, and inserts classes where necessary to highlight the changed/moved/deleted/added areas, and then removes
-    deleteElement(oldBlockUploaderList[i], settings); //Deleting the items labeled for deletion
+  for (let i = 0; i < BlockUploaderOldList.length; i++) {
+    addClass(BlockUploaderOldList[i], settings); // The function checks the properties of objects, and inserts classes 
+    deleteClass(BlockUploaderOldList[i], settings); // Delete class - blink
+    // where necessary to highlight the changed/moved/deleted/added areas, and then removes
+    deleteDOMmarked(BlockUploaderOldList[i], settings); //Deleting the items labeled for deletion
   }
 }
 
@@ -187,9 +198,9 @@ function createUploaderBlock(domElement) {
 /**
  * Moves styles to the properties of objects so that they do not interfere with the comparison of elements
  */
-function moveStyles(oldBlockUploader, newBlockUploader) {
-  moveStyle(oldBlockUploader);
-  moveStyle(newBlockUploader);
+function moveStyles(BlockUploaderOld, BlockUploaderNew) {
+  moveStyle(BlockUploaderOld);
+  moveStyle(BlockUploaderNew);
 }
 
 
@@ -206,11 +217,11 @@ function moveStyle(BlockUploader) {
 /**
  * The function moves styles to the properties of the object so that they do not interfere with the comparison of elements
  */
-function undoMoveStyle(oldBlockUploader) {
-  if (oldBlockUploader.domElement.nodeType === 1) {
-    oldBlockUploader.moveStyleInDOM();
-    for (let i = 0; i < oldBlockUploader.children.length; i++) {
-      undoMoveStyle(oldBlockUploader.children[i]);
+function undoMoveStyle(BlockUploaderOld) {
+  if (BlockUploaderOld.domElement.nodeType === 1) {
+    BlockUploaderOld.moveStyleInDOM();
+    for (let i = 0; i < BlockUploaderOld.children.length; i++) {
+      undoMoveStyle(BlockUploaderOld.children[i]);
     }
   }
 }

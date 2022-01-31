@@ -1,25 +1,20 @@
-
-
-export function addElements(oldBlockUploader, newBlockUploader) {
-  return _addElements(oldBlockUploader, newBlockUploader);
+export function addElements(_BlockUploaderOld, _BlockUploaderNew) {
+  BlockUploaderOld = _BlockUploaderOld;
+  BlockUploaderNew = _BlockUploaderNew;
+  return _addElements();
 }
 
+let BlockUploaderOld
+let BlockUploaderNew
 
-/**
- *
- * @param oldBlockUploader {BlockUploader}
- * @param newBlockUploader {BlockUploader}
- * @private
- */
-function _addElements(oldBlockUploader, newBlockUploader) {
 
-  addStepAndNextNumberElementEqual(oldBlockUploader);
-  addStepAndNextNumberElementEqual(newBlockUploader);
+function _addElements() {
 
-  oldBlockUploader.logger('Выводим св-ва объектов (старые)(до добавления):', 'delete', 'label_add', 'stepToNumberElementEqual', 'nextNumberElementEqual', 'stepToNumberElementEqualReverse');
-  newBlockUploader.logger('Выводим св-ва объектов (новые):', 'stepToNumberElementEqual', 'nextNumberElementEqual','stepToNumberElementEqualReverse');
-  add(oldBlockUploader, newBlockUploader);
-  oldBlockUploader.logger('Выводим св-ва объектов (старые)(после добавления):', 'delete', 'label_add', 'stepToNumberElementEqual', 'nextNumberElementEqual', 'stepToNumberElementEqualReverse');
+  addStepAndNextNumberElementEqual(BlockUploaderOld);
+  addStepAndNextNumberElementEqual(BlockUploaderNew);
+
+  add();
+  BlockUploaderOld.logger('Output the properties of objects (old)(after adding):', 'delete', 'label_add', 'stepToNumberElementEqual', 'nextNumberElementEqual', 'stepToNumberElementEqualReverse');
 }
 
 function addStepAndNextNumberElementEqual(blockUploader) {
@@ -51,39 +46,23 @@ function addStepAndNextNumberElementEqual(blockUploader) {
       prev =1;
     }
   }
-  /*
-    let counter = children.length -1;
-    for (let i = children.length -1; i > 0; i--) {
-      if(children[i].numberElementEqual !== undefined) {
-        counter = 0;
-      }
-      if( children[i].numberElementEqual === undefined) {
-        counter++;
-        children[i].stepToNumberElementEqualReverse = i;
-      }
   
-    }*/
-
 }
 
-/**
- *
- * @param oldBlockUploader {BlockUploader}
- * @param newBlockUploader {BlockUploader}
- */
-function add(oldBlockUploader, newBlockUploader) {
-  let endNumber = 1;
-  let oldChildren = oldBlockUploader.children;
-  let newChildren = newBlockUploader.children;
+function add() {
+  let oldChildren = BlockUploaderOld.children;
+  let newChildren = BlockUploaderNew.children;
   for (let i = 0; i < newChildren.length; i++) {
-    if(newChildren[i].stepToNumberElementEqualReverse !== undefined && newChildren[i].nextNumberElementEqual !== undefined) {
+    if(
+      newChildren[i].stepToNumberElementEqualReverse !== undefined && 
+      newChildren[i].nextNumberElementEqual !== undefined
+    ) {
       if(!oldChildren.find(item => (
         item.stepToNumberElementEqualReverse === newChildren[i].stepToNumberElementEqualReverse &&
         item.nextNumberElementEqual === newChildren[i].nextNumberElementEqual))) {
         //Need add
-
         let indexItem = oldChildren.findIndex(item => item.numberElementEqual === newChildren[i].nextNumberElementEqual);
-        addAndAddLabelBefore(oldBlockUploader, indexItem, newChildren[i]);
+        addAndAddLabelBefore( indexItem, newChildren[i]);
       }
     }
   }
@@ -94,20 +73,20 @@ function add(oldBlockUploader, newBlockUploader) {
   let countAddInEnd = countElementEndNew - countElementEndOld
   let counter = 0;
   for (let i = newChildren.length -  countAddInEnd; i < newChildren.length; i++) {
-    addAndAddLabelAfter(oldBlockUploader, oldChildren.length - 1, newChildren[i]);
+    addAndAddLabelAfter( oldChildren.length - 1, newChildren[i]);
     counter++;
   }
 
 }
 
-function addAndAddLabelAfter(old_wsdom, place, new_child) {
+function addAndAddLabelAfter(place, new_child) {
   addProperty(new_child);
-  old_wsdom.addAfter(place, new_child);
+  BlockUploaderOld.addAfter(place, new_child);
 }
 
-function addAndAddLabelBefore(old_wsdom, place, new_child) {
+function addAndAddLabelBefore(place, new_child) {
   addProperty(new_child);
-  old_wsdom.addBefore(place, new_child);
+  BlockUploaderOld.addBefore(place, new_child);
 }
 
 function addProperty(new_child) {

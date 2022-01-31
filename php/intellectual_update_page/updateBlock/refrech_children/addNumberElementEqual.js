@@ -1,16 +1,16 @@
-export function addNumberElementEqual(_oldBlockUploader, _newBlockUploader) {
-  oldBlockUploader = _oldBlockUploader;
-  newBlockUploader = _newBlockUploader;
+export function addNumberElementEqual(_BlockUploaderOld, _BlockUploaderNew) {
+  BlockUploaderOld = _BlockUploaderOld;
+  BlockUploaderNew = _BlockUploaderNew;
   return _addNumberElementEqual();
 }
 
-let oldBlockUploader
-let newBlockUploader
+let BlockUploaderOld
+let BlockUploaderNew
 
 
 function _addNumberElementEqual() {
   let lastIndex = 0;
-  for (let [newIndex, newItem]  of newBlockUploader.children.entries()) {
+  for (let [newIndex, newItem]  of BlockUploaderNew.children.entries()) {
             if (newItem.domElement.nodeType !== 1) {
               continue;
             }
@@ -25,16 +25,13 @@ function _addNumberElementEqual() {
       lastIndex = newIndex;
     }
   }
-
-  oldBlockUploader.logger('Properties of objects (old):');
-  newBlockUploader.logger('Properties of objects (new):');
 }
 
 
 function getElementOldEqual(elementNew,startFind = 0) {
   
-  for (let i = startFind; i < oldBlockUploader.children.length; i++) {
-    let elementOld = oldBlockUploader.children[i];
+  for (let i = startFind; i < BlockUploaderOld.children.length; i++) {
+    let elementOld = BlockUploaderOld.children[i];
     if(elementOld.numberElementEqual === undefined) {
       if (elementOld.domElement.nodeType === 1 && elementOld.domElement.isEqualNode(elementNew.domElement)) {
         return elementOld;

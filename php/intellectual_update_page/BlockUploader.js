@@ -91,19 +91,19 @@ export class BlockUploader {
 
   /**
    * Moves the BlockUploader object as well as the DOM element
-   * @param oldPlace {int}
-   * @param newPlace {int}
+   * @param plaseOld {int}
+   * @param placeNew {int}
    */
-  move(oldPlace, newPlace) {
+  move(plaseOld, placeNew) {
     let children = this.children;
-    let domOld = children[oldPlace].domElement;
-    let domNew = children[newPlace].domElement;
+    let domOld = children[plaseOld].domElement;
+    let domNew = children[placeNew].domElement;
     domNew.after(domOld);
-    children.splice(newPlace + 1, 0, children[oldPlace]);
-    if (newPlace < oldPlace) {
-      oldPlace++;  //Prev
+    children.splice(placeNew + 1, 0, children[plaseOld]);
+    if (placeNew < plaseOld) {
+      plaseOld++;  //Prev
     }
-    children.splice(oldPlace, 1);
+    children.splice(plaseOld, 1);
   }
 
 
@@ -154,6 +154,7 @@ export class BlockUploader {
     this.add(place, blockUploaderNew, 'after')
   }
 
+  
   /**
    * Outputs the status of BlockUploader elements to the console
    * @param nameLog {string} - name log`s

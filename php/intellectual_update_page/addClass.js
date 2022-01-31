@@ -1,29 +1,29 @@
-export function blink(wsdom, settings) {
-  return _blink(wsdom, settings);
+export function addClass(BlockUploader, settings) {
+  return _addClass(BlockUploader, settings);
 }
 
 
 /**
- * Показываем, и убираем подмигивания
- * @param wsdom
+ * Show, and remove the winks
+ * @param BlockUploader
  * @param settings
  * @private
  */
-function _blink(wsdom, settings) {
-  showBlink(wsdom, settings);
-  closeBlink(wsdom, settings);
+function _addClass(BlockUploader, settings) {
+  showBlink(BlockUploader, settings);
+  closeBlink(BlockUploader, settings);
 }
 
 
 /**
  * Функция проверяет свойства объектов, и там где надо вставляяет классы для подсветки
- * @param wsdom {WSDOM}
+ * @param BlockUploader {BlockUploader}
  * @param settings - настройки модуля
  */
-function showBlink(wsdom, settings) {
-  showBlinkSingle(wsdom, settings);
-    for (let i = 0; i < wsdom.children.length; i++) {
-      showBlink(wsdom.children[i], settings);
+function showBlink(BlockUploader, settings) {
+  showBlinkSingle(BlockUploader, settings);
+    for (let i = 0; i < BlockUploader.children.length; i++) {
+      showBlink(BlockUploader.children[i], settings);
     }
 
 
@@ -31,16 +31,16 @@ function showBlink(wsdom, settings) {
    * Сравниваем, если у объекта есть свойство с данной меткой
    * @param settings - настройки модуля
    */
-  function showBlinkSingle(wsdom, settings) {
-    const labelList = wsdom.getTurnOnLabelList();
+  function showBlinkSingle(BlockUploader, settings) {
+    const labelList = BlockUploader.getTurnOnLabelList();
     labelList.forEach((item) => {
-      addClass(wsdom.domElement, settings.classColorFlag[item], 'all'); //Подсвечиваем изменения
+      addClass(BlockUploader.domElement, settings.classColorFlag[item], 'all'); //Подсвечиваем изменения
     });
   }
 
   /**
    * Помечаем классом все элементы, в том числе и вложенные
-   * old_domElement {WSDOM} - элемент к которому применяется класс
+   * old_domElement {BlockUploader} - элемент к которому применяется класс
    * class_name string - имя класса
    * type - all - применяется класс к элементу, и всем вложенным в него элементам
    */
@@ -60,19 +60,19 @@ function showBlink(wsdom, settings) {
 
 /**
  * Удаляем классы подсветки измененых областей
- * @param wsdom {WSDOM}
+ * @param BlockUploader {BlockUploader}
  * @param settings - настройки модуля
  */
-function closeBlink(wsdom, settings) {
-  closeBlinkItem(wsdom);
-  for (let item of wsdom.children) {
+function closeBlink(BlockUploader, settings) {
+  closeBlinkItem(BlockUploader);
+  for (let item of BlockUploader.children) {
     // noinspection JSUnfilteredForInLoop (нужно чтоб phpstorm не ругался)
     closeBlink(item, settings);
   }
 
   /**
    * Сравниваем, если у объекта есть свойство с данной меткой, то удаляем у него класс
-   * @param item {WSDOM}
+   * @param item {BlockUploader}
    */
   function closeBlinkItem(item) {
     const labelList = item.getTurnOnLabelList();
@@ -83,7 +83,7 @@ function closeBlink(wsdom, settings) {
 
   /**
    * Удаляем у объекта item класс name_class через время timeCloseBlink
-   * @param item {WSDOM}
+   * @param item {BlockUploader}
    * @param name_class string
    * @param timeCloseBlink int
    */

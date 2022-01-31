@@ -1,23 +1,18 @@
-export function checkElements(old_wsdom, new_wsdom) {
-  debug = old_wsdom.debug;
-  return _checkElements(old_wsdom, new_wsdom);
+export function checkElements(BlockUploaderOld, BlockUploaderNew) {
+  debug = BlockUploaderOld.debug;
+  return _checkElements(BlockUploaderOld, BlockUploaderNew);
 }
 
 let debug = null;
 
 
-/**
- * Проверяем элементы
- * @param old_wsdom {WSDOM}
- * @param new_wsdom {WSDOM}
- */
-function _checkElements(old_wsdom, new_wsdom) {
-  let old_children = old_wsdom.children;
-  let new_children = new_wsdom.children;
+function _checkElements(BlockUploaderOld, BlockUploaderNew) {
+  let old_children = BlockUploaderOld.children;
+  let new_children = BlockUploaderNew.children;
   let count_delete = 0;
   for (let i = 0; i < old_children.length; i++) {
     if (old_children[i].isDelete === true) {
-      count_delete++; //Считаем количество элементов на удаление
+      count_delete++; //Counting the number of items to delete
       continue;
     }
     if (old_children[i].numberElementEqual) {
@@ -42,8 +37,7 @@ function _checkElements(old_wsdom, new_wsdom) {
 
 
 /**
- * Либо вызываем ошибку, либо пишем консоль браузера об неполадке
- * @param text - текст сообщения
+ * Either we cause an error, or we write to the browser console about the problem
  */
 function showError(text) {
   if (debug) {

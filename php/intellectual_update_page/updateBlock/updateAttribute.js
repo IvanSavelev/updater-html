@@ -3,29 +3,30 @@ export function updateAttribute(old_block, new_block) {
 }
 
 
-function _updateAttribute(oldBlockUploader, newBlockUploader) {
-  if (checkUpdate(oldBlockUploader, newBlockUploader)) {
-    update(oldBlockUploader, newBlockUploader);
+function _updateAttribute(BlockUploaderOld, BlockUploaderNew) {
+  if (checkUpdate(BlockUploaderOld, BlockUploaderNew)) {
+    update(BlockUploaderOld, BlockUploaderNew);
   }
 }
 
 
-function checkUpdate(oldBlockUploader, newBlockUploader) {
+function checkUpdate(BlockUploaderOld, BlockUploaderNew) {
 
-  let oldAttributes = oldBlockUploader.domElement.attributes;
-  let newAttributes = newBlockUploader.domElement.attributes;
+  let attributesOld = BlockUploaderOld.domElement.attributes;
+  let attributesNew = BlockUploaderNew.domElement.attributes;
 
 
-  if (oldAttributes.length !== newAttributes.length) {
+  if (attributesOld.length !== attributesNew.length) {
     return true;  //Their number is different, so you definitely need to change
   }
 
   let changedAttributes = false;
-  for (let i = 0; i < oldAttributes.length; i++) {
-    let oldAttr = oldAttributes.item(i);
-    let newAttr = newAttributes.getNamedItem(oldAttr.name);
+  for (let i = 0; i < attributesOld.length; i++) {
+    let oldAttr = attributesOld.item(i);
+    let newAttr = attributesNew.getNamedItem(oldAttr.name);
     if (!newAttr) {
-      changedAttributes = true;//There is no such attribute in the new block at all - We change the old attributes to new ones
+      //There is no such attribute in the new block at all - We change the old attributes to new ones
+      changedAttributes = true;
       break;
     }
     if (oldAttr.nodeValue !== newAttr.nodeValue) {
@@ -36,17 +37,17 @@ function checkUpdate(oldBlockUploader, newBlockUploader) {
   return changedAttributes;
 }
 
-function update(oldBlockUploader, newBlockUploader) {
-  let oldAttributes = oldBlockUploader.domElement.attributes;
-  let newAttributes = newBlockUploader.domElement.attributes;
+function update(BlockUploaderOld, BlockUploaderNew) {
+  let attributesOld = BlockUploaderOld.domElement.attributes;
+  let attributesNew = BlockUploaderNew.domElement.attributes;
 
   //Remove old
-  while (oldAttributes.length > 0) {
-    oldBlockUploader.domElement.removeAttribute(oldAttributes[0].name);
+  while (attributesOld.length > 0) {
+    BlockUploaderOld.domElement.removeAttribute(attributesOld[0].name);
   }
   //Paste new
-  for (let i = 0; i < newAttributes.length; i++) {
-    oldBlockUploader.domElement.setAttribute(newAttributes[i].name, newAttributes[i].value);
+  for (let i = 0; i < attributesNew.length; i++) {
+    BlockUploaderOld.domElement.setAttribute(attributesNew[i].name, attributesNew[i].value);
   }
-  oldBlockUploader.turnOnLabel('update_attributes')
+  BlockUploaderOld.turnOnLabel('update_attributes')
 }

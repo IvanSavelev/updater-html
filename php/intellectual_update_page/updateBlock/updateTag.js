@@ -1,15 +1,17 @@
-export function updateTag(oldBlockUploader, newBlockUploader) {
-  return _updateTag(oldBlockUploader, newBlockUploader);
+export function updateTag(BlockUploaderOld, BlockUploaderNew) {
+  return _updateTag(BlockUploaderOld, BlockUploaderNew);
 }
 
-function _updateTag(oldBlockUploader, newBlockUploader) {
-  if (oldBlockUploader.domElement.nodeType === 1 && newBlockUploader.domElement.nodeType === 1) {
-    if (oldBlockUploader.domElement.tagName !== newBlockUploader.domElement.tagName) {
-      let cloneChildNew = newBlockUploader.domElement.cloneNode(true); //So that the new element is not deleted, we need to keep it so as not to break further logic
-      oldBlockUploader.domElement.replaceWith(cloneChildNew); //We change all the content, it doesn't come out any other way
-      oldBlockUploader.turnOnLabel('update_tag'); //Add a label
+function _updateTag(BlockUploaderOld, BlockUploaderNew) {
+  if (BlockUploaderOld.domElement.nodeType === 1 && BlockUploaderNew.domElement.nodeType === 1) {
+    if (BlockUploaderOld.domElement.tagName !== BlockUploaderNew.domElement.tagName) {
+      //So that the new element is not deleted, we need to keep it so as not to break further logic
+      let cloneChildNew = BlockUploaderNew.domElement.cloneNode(true);
+      //We change all the content, it doesn't come out any other way
+      BlockUploaderOld.domElement.replaceWith(cloneChildNew); 
+      BlockUploaderOld.turnOnLabel('update_tag'); //Add a label
       
-      oldBlockUploader.domElement = cloneChildNew;
+      BlockUploaderOld.domElement = cloneChildNew;
       return true;
     }
   }
