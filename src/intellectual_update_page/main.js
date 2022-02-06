@@ -28,6 +28,8 @@ export function UpdateBlock(_settings) {
 }
 
 
+
+
 /**
  * Check required fields
  */
@@ -264,4 +266,5 @@ function deleteEmptyClass(domElement) {
     domElement.removeAttribute('class');
   }
 }
+
 

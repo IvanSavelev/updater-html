@@ -107,7 +107,9 @@
 
 
 
-<script type="module" src="script2.js"></script>
+
+<script  src="bundle.js"></script>
+
 </body>
 </html>
 

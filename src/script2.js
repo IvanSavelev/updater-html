@@ -1,6 +1,6 @@
 import { UpdateBlock} from "./intellectual_update_page/main.js";
 
-function updateContentWebSocket() {
+export function updateContentWebSocket() {
   fetch(document.URL)
     .then((response) => {
       return response.text();

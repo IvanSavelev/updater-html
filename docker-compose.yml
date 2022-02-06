@@ -19,9 +19,9 @@ services:
 
   php:
     image: php:7.4-fpm
-    working_dir: /var/www/updater/php
+    working_dir: /var/www/updater/public
     volumes:
-      - ./php:/var/www/updater/php
+      - ./public:/var/www/updater/public
     networks:
       - network
     tty: true
