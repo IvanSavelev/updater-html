@@ -24,10 +24,81 @@
 <body>
 <?php if (@$_COOKIE['num'] === '0') { ?>
     <dev data-websocket_update="4">
+        <div>
+            <p>Update Tag:</p>
+            <p>apple</p>
+            <p>orange</p>
+        </div>
+        <div>
+            <p>Update Type:</p>
+            <p>apple</p>
+            <p>orange</p>
+        </div>
+        <div>
+            <p>Move:</p>
+            <p>apple</p>
+            <p>orange</p>
+        </div>
+        <div>
+            <p>Move Analytical:</p>
+            <p>apple</p>
+            <p>orange</p>
+        </div>
+        <div>
+            <p>Delete:</p>
+            <p>apple</p>
+            <p>orange</p>
+        </div>
+        <div>
+            <p>Add:</p>
+            <p>apple</p>
+            <p>orange</p>
+        </div>
+        <div>
+            <p>Update:</p>
+            <p>apple</p>
+            <p>orange</p>
+        </div>
         <p style="font-size: 60px">Update Tag:</p>
     </dev>
 <?php } else { ?>
     <dev data-websocket_update="4" >
+        <div>
+            <p>Update Tag:</p>
+            <p class="new">apple</p>
+            <p data-change="true">orange</p>
+        </div>
+        <div>
+            <p>Update Type:</p>
+            <div>apple</div>
+            <div>orange</div>
+        </div>
+        <div>
+            <p>Move:</p>
+            <p>orange</p>
+            <p>apple</p>
+        </div>
+        <div>
+            <p>Move Analytical:</p>
+            <p>orange</p>
+            <p>pear</p>
+        </div>
+        <div>
+            <p>Delete:</p>
+            <p>apple</p>
+        </div>
+        <div>
+            <p>Add:</p>
+            <p>apple</p>
+            <p>orange</p>
+            <p>pear</p>
+            <p>cucumber</p>
+        </div>
+        <div>
+            <p>Update:</p>
+            <p>pear</p>
+            <p>potato</p>
+        </div>
         <p style="font-size: 30px">Update Tag:</p>
     </dev>
 <?php } ?>
