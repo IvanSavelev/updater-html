@@ -10,7 +10,7 @@ let newDomNodeList = {}
 let BlockUploaderOldList = []
 let BlockUploaderNewList = []
 
-export function UpdateBlock(_settings) {
+export default function UpdateBlock(_settings) {
   settings = Object.assign({}, settingsDefault, _settings);
   checkRequiredField();
   oldDomNodeList = settings.oldDomDocument.querySelectorAll('[' + settings.querySelector + ']');
@@ -48,6 +48,7 @@ const settingsDefault = {
   newDomDocument: null, //Required field new DOM page
   debug: false, //Show-hide logs
   timeCloseBlink: 500, //Time blink
+  chengeStyle: true, //Chenge stiles 
   querySelector: 'data-websocket_update', //Selector for selecting blocks to update
   classColorFlag: { //Classes for highlighting modified areas (action/class name)
     update_content: 'uploader-update', //Updating content
@@ -158,9 +159,15 @@ function getNewBlockForName(name) {
 
 function updateContent() {
   for (let i = 0; i < BlockUploaderOldList.length; i++) {
-    moveStyles(BlockUploaderOldList[i], BlockUploaderNewList[i]);
+    if(!settings.chengeStyle) {
+      moveStyles(BlockUploaderOldList[i], BlockUploaderNewList[i]);
+    }
+    
     updateOldBlock(BlockUploaderOldList[i], BlockUploaderNewList[i]);
-    undoMoveStyle(BlockUploaderOldList[i]);
+    
+    if(!settings.chengeStyle) {
+      undoMoveStyle(BlockUploaderOldList[i]);
+    }
   }
 }
 

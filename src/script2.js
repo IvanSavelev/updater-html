@@ -1,4 +1,4 @@
-import { UpdateBlock} from "./intellectual_update_page/main.js";
+import UpdateBlock from "./intellectual_update_page/main.js";
 
 export function updateContentWebSocket() {
   fetch(document.URL)

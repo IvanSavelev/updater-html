@@ -64,14 +64,13 @@ export class BlockUploader {
     }
   }
 
-
+  
   /**
    * Moving a style to the properties of a DOM object
    */
   moveStyleInDOM() {
-    if (this.domElement.hasAttribute('style')) {
-      this.saveStyle = this.domElement.getAttribute('style');
-      this.domElement.removeAttribute('style');
+    if (this.saveStyle) {
+      this.domElement.setAttribute('style', this.saveStyle);
     }
   }
 
