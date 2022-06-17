@@ -21,7 +21,7 @@ function _updateElements() {
       countDelete++; //Counting the number of items to delete
       continue;
     }
-    if (old_children[i].numberElementEqual === undefined) {
+    if(BlockUploaderOld.settingsGeneral.moduleStatus.move !== 'working' || old_children[i].numberElementEqual === undefined) {
       //Skip the elements that have just been added
       if (old_children[i].isAdd) {
         continue;
@@ -53,9 +53,10 @@ function updateBlockEnding(BlockOld, BlockNew, BlockParent, i) {
 
   let old_node_value = BlockOld.domElement.nodeValue ?? BlockOld.domElement.outerHTML;
   let new_node_value = BlockNew.domElement.nodeValue ?? BlockNew.domElement.outerHTML;
+  
   let old_value = (old_node_value ? old_node_value : '').trim();
   let new_value = (new_node_value ? new_node_value : '').trim();
-  if (old_value !== new_value) {
+  if (old_value !== new_value ||BlockOld.domElement.nodeType !== BlockNew.domElement.nodeType) {
     //So that the new element is not deleted, we need to keep it so as not to break further logic
     let cloneChildNew = BlockNew.domElement.cloneNode(true); 
     BlockOld.domElement.replaceWith(cloneChildNew);

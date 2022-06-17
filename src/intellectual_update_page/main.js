@@ -48,7 +48,13 @@ const settingsDefault = {
   newDomDocument: null, //Required field new DOM page
   debug: false, //Show-hide logs
   timeCloseBlink: 500, //Time blink
-  chengeStyle: true, //Chenge stiles 
+  changeStyle: true, //Change stiles 
+  moduleStatus: {
+    move: 'working', //Moving (swapping elements so that they go in order)  working/not working
+    move_analytical: 'working', //Analytical move  working/not working
+    update_attributes: 'working', //Update attributes witout style
+    update_tag: 'working', //Updating type element (p to div or div to h1 etc)  working/not working
+  },
   querySelector: 'data-websocket_update', //Selector for selecting blocks to update
   classColorFlag: { //Classes for highlighting modified areas (action/class name)
     update_content: 'uploader-update', //Updating content
@@ -57,8 +63,7 @@ const settingsDefault = {
     update_attributes: 'uploader-update-attribute', //Smart moving
     add: 'uploader-add', //Adding a new element
     delete: 'uploader-delete', //Delete a element
-    update_tag: 'uploader-update-tag', //Updating the element tag (class, data, name etc, except for teg style)
-    update_type: 'uploader-update-type', //Updating type element (p to div or div to h1 etc)
+    update_tag: 'uploader-update-tag' //Updating the element tag (class, data, name etc, except for teg style)
   },
   event: { //Events to which functions can be linked
     end_update: function () { //Occurs when blocks are redrawn
@@ -159,13 +164,13 @@ function getNewBlockForName(name) {
 
 function updateContent() {
   for (let i = 0; i < BlockUploaderOldList.length; i++) {
-    if(!settings.chengeStyle) {
+    if(!settings.changeStyle) {
       moveStyles(BlockUploaderOldList[i], BlockUploaderNewList[i]);
     }
     
     updateOldBlock(BlockUploaderOldList[i], BlockUploaderNewList[i]);
     
-    if(!settings.chengeStyle) {
+    if(!settings.changeStyle) {
       undoMoveStyle(BlockUploaderOldList[i]);
     }
   }
@@ -192,7 +197,8 @@ function finishSteps() {
 function createUploaderBlock(domElement) {
   let object = new BlockUploader(domElement);
 
-  object.debug = settings.debug;
+  object.debug = settings.debug; //TODO Move to settings
+  object.settingsGeneral = settings;
 
   if (domElement.nodeType === 1) {
     // noinspection JSValidateTypes

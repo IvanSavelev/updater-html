@@ -22,8 +22,7 @@ export class BlockUploader {
   //A block of labels for adding classes
   label =
     {
-      update_tag: undefined, 
-      update_type: undefined, 
+      update_tag: undefined,
       update_attributes: undefined,
       move: undefined,
       move_analytical: undefined,
@@ -31,6 +30,8 @@ export class BlockUploader {
       add: undefined,
       update_content: undefined
     }
+    
+  settingsGeneral = {} //Shared for all blocks, here because they mey be needing in any place  
 
   constructor(domElement) {
     Object.seal(this);

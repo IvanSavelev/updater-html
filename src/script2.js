@@ -13,7 +13,13 @@ export function updateContentWebSocket() {
         newDomDocument:docNew,
         timeCloseBlink:500,
         oldDomDocument:document,
-        debug: true
+        debug: true,
+        moduleStatus: {
+          move: 'working', //Moving (swapping elements so that they go in order)  working/not working
+          move_analytical: 'working', //Analytical move  working/not working
+          update_attributes: 'working', //Update attributes witout style
+          update_tag: 'working', //Updating the element tag (class, data, name etc, except for teg style)  working/not working
+        },
       });
       let end = new Date().getTime(); //Нужно для подсчета времени выполнения скрипта
       console.log('Время выполнения скрипта вебсокета (миллисекунд): ' + String(Number(end) - Number(start)));
