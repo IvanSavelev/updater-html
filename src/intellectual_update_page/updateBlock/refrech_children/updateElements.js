@@ -61,6 +61,7 @@ function updateBlockEnding(BlockOld, BlockNew, BlockParent, i) {
     let cloneChildNew = BlockNew.domElement.cloneNode(true); 
     BlockOld.domElement.replaceWith(cloneChildNew);
     let db = new BlockUploader(cloneChildNew);
+    db.selectorHook = BlockOld.selectorHook;
     db.turnOnLabel('update_content');
     BlockParent.children.splice(i ,1, db);
     if(db.domElement.nodeType === 3  && new_value !== "") {

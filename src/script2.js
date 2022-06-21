@@ -13,7 +13,7 @@ export function updateContentWebSocket() {
         newDomDocument:docNew,
         timeCloseBlink:500,
         oldDomDocument:document,
-        debug: true,
+        debug: false,
         moduleStatus: {
           move: 'working', //Moving (swapping elements so that they go in order)  working/not working
           move_analytical: 'working', //Analytical move  working/not working
@@ -29,6 +29,6 @@ export function updateContentWebSocket() {
 elem.onclick = function() {
   updateContentWebSocket();
 };
-//setInterval(updateContentWebSocket, 10000);
+setInterval(updateContentWebSocket, 50);
 
 

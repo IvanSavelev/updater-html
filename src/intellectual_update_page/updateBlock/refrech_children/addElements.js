@@ -90,6 +90,15 @@ function addAndAddLabelBefore(place, new_child) {
 }
 
 function addProperty(new_child) {
-  new_child.turnOnLabel('add');
-  new_child.isAdd = true;
+  let block = null;
+  if(BlockUploaderOld.selectorHook) {
+    //If it is a hook:
+    block = BlockUploaderOld;
+  } else {
+    block = new_child;
+  }
+
+  block.turnOnLabel('add');
+  block.isAdd = true;
+  
 }

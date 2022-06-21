@@ -55,7 +55,8 @@ const settingsDefault = {
     update_attributes: 'working', //Update attributes witout style
     update_tag: 'working', //Updating type element (p to div or div to h1 etc)  working/not working
   },
-  querySelector: 'data-websocket_update', //Selector for selecting blocks to update
+  querySelector: 'data-updater_update', //Selector for selecting blocks to update
+  querySelectorHook: 'data-updater_hook', //Selector for selecting blocks to update 
   classColorFlag: { //Classes for highlighting modified areas (action/class name)
     update_content: 'uploader-update', //Updating content
     move: 'uploader-move', //Moving (swapping elements so that they go in order)
@@ -194,16 +195,20 @@ function finishSteps() {
 /**
  * Creates an array of wrapper objects for the DOM object
  */
-function createUploaderBlock(domElement) {
+function createUploaderBlock(domElement, selectorHook = null, parentBlock = null) {
   let object = new BlockUploader(domElement);
-
+  if(domElement.nodeType === 1 && domElement.hasAttribute(settings.querySelectorHook)) {
+    selectorHook = object; //
+  }
+  object.selectorHook = selectorHook;
+  object.parentBlock = parentBlock;
   object.debug = settings.debug; //TODO Move to settings
   object.settingsGeneral = settings;
 
   if (domElement.nodeType === 1) {
     // noinspection JSValidateTypes
     for (let i = 0; i < domElement.childNodes.length; i++) {
-      object.children.push(createUploaderBlock(domElement.childNodes[i]));
+      object.children.push(createUploaderBlock(domElement.childNodes[i], selectorHook, object));
     }
   }
   return object;

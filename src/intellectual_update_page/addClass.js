@@ -29,6 +29,7 @@ function showBlink(BlockUploader, settings) {
 
   /**
    * Сравниваем, если у объекта есть свойство с данной меткой
+   * @param BlockUploader
    * @param settings - настройки модуля
    */
   function showBlinkSingle(BlockUploader, settings) {

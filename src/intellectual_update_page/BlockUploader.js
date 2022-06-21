@@ -15,6 +15,9 @@ export class BlockUploader {
   stepToNumberElementEqual = undefined;
   nextNumberElementEqual = undefined;
   stepToNumberElementEqualReverse = undefined;
+
+  selectorHook = null; //This property mean what class blank needs paste higher up to DOM-tree, there is hook for paste //TODO оменять описание
+  parentBlock = null;
   
   children = []; //The children BlockUploader objects (nesting coincides with the nesting of DOM elements)
   debug = false; //A property based on which it is clear how to output errors
@@ -40,7 +43,11 @@ export class BlockUploader {
   
   turnOnLabel(nameLabel)
   {
-    this.label[nameLabel] = true;
+    if(this.parentBlock && this.parentBlock.selectorHook) {
+      this.parentBlock.selectorHook.label[nameLabel] = true;
+    } else {
+      this.label[nameLabel] = true;
+    }
   }
   
   getTurnOnLabelList() {
