@@ -49,6 +49,8 @@ const settingsDefault = {
   debug: false, //Show-hide logs
   timeCloseBlink: 500, //Time blink
   changeStyle: true, //Change stiles 
+  onlyUpdate: false, 
+  onlyAddAndDelete: false,
   moduleStatus: {
     move: 'working', //Moving (swapping elements so that they go in order)  working/not working
     move_analytical: 'working', //Analytical move  working/not working

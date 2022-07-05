@@ -29,7 +29,26 @@ function _addNumberElementEqual() {
 
 
 function getElementOldEqual(elementNew,startFind = 0) {
-  
+  if(elementNew.settingsGeneral.onlyUpdate) { //Check only direct matching
+    return getElementOldEqualOnlyUpdate(elementNew,startFind);
+  } else {
+    return getElementOldEqualStandard(elementNew,startFind);
+  }
+}
+
+function getElementOldEqualOnlyUpdate(elementNew,startFind) {
+  let elementOld = BlockUploaderOld.children[startFind];
+  if (elementOld.domElement.nodeType === 1 && elementOld.domElement.isEqualNode(elementNew.domElement)) {
+    return elementOld;
+  }
+  if (elementOld.domElement.nodeType !== 1 && elementOld.domElement.nodeValue === elementNew.domElement.nodeValue) {
+    return elementOld;
+  }
+
+  return false;
+}
+
+function getElementOldEqualStandard(elementNew,startFind) {
   for (let i = startFind; i < BlockUploaderOld.children.length; i++) {
     let elementOld = BlockUploaderOld.children[i];
     if(elementOld.numberElementEqual === undefined) {
@@ -41,6 +60,7 @@ function getElementOldEqual(elementNew,startFind = 0) {
       }
     }
   }
+
   return false;
 }
 
