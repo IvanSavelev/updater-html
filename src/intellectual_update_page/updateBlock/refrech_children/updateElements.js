@@ -42,10 +42,40 @@ function updateElement(BlockOld, BlockNew,  BlockParent, i) {
     BlockOld.children.length &&
     BlockNew.children.length
   ) {
-    updateBlock(BlockOld, BlockNew); //RECURSIVELY CHECK
+    if(BlockParent.settingsGeneral.onlyAddAndDelete && BlockOld.isSelectorHookAddAndDelete) {
+      setDelete(BlockOld);
+      setAdd(BlockOld, BlockNew, BlockParent, i)
+    } else {
+      updateBlock(BlockOld, BlockNew); //RECURSIVELY CHECK
+    }
   } else {
     updateBlockEnding(BlockOld, BlockNew, BlockParent, i);
   }
+}
+
+function setDelete(block) {
+  block.turnOnLabel('delete')
+  block.isDelete = true;
+}
+
+function setAdd(BlockOld, BlockNew, BlockParent, i) {
+  addProperty(BlockOld, BlockNew)
+  BlockParent.addBefore(i, BlockNew);
+}
+
+
+function addProperty(BlockOld, new_child) {
+  let block = null;
+  if(BlockOld.selectorHookBlink && BlockOld.selectorHookBlink !== BlockOld) {
+    //If it is a hook:
+    block = BlockOld.selectorHookBlink;
+  } else {
+    block = new_child;
+  }
+
+  block.turnOnLabel('add');
+  block.isAdd = true;
+
 }
 
 function updateBlockEnding(BlockOld, BlockNew, BlockParent, i) {
@@ -61,7 +91,7 @@ function updateBlockEnding(BlockOld, BlockNew, BlockParent, i) {
     let cloneChildNew = BlockNew.domElement.cloneNode(true); 
     BlockOld.domElement.replaceWith(cloneChildNew);
     let db = new BlockUploader(cloneChildNew);
-    db.selectorHook = BlockOld.selectorHook;
+    db.selectorHookBlink = BlockOld.selectorHookBlink;
     db.turnOnLabel('update_content');
     BlockParent.children.splice(i ,1, db);
     if(db.domElement.nodeType === 3  && new_value !== "") {

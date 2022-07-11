@@ -91,7 +91,7 @@ function addAndAddLabelBefore(place, new_child) {
 
 function addProperty(new_child) {
   let block = null;
-  if(BlockUploaderOld.selectorHook) {
+  if(BlockUploaderOld.selectorHookBlink) {
     //If it is a hook:
     block = BlockUploaderOld;
   } else {

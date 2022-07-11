@@ -13,11 +13,12 @@ export function updateContentWebSocket() {
         newDomDocument:docNew,
         timeCloseBlink:500,
         oldDomDocument:document,
-        debug: false,
+        debug: true,
+        onlyAddAndDelete:true,
         moduleStatus: {
           move: 'working', //Moving (swapping elements so that they go in order)  working/not working
           move_analytical: 'working', //Analytical move  working/not working
-          update_attributes: 'working', //Update attributes witout style
+          update_attributes: 'working', //Update attributes without style
           update_tag: 'working', //Updating the element tag (class, data, name etc, except for teg style)  working/not working
         },
       });
@@ -29,6 +30,6 @@ export function updateContentWebSocket() {
 elem.onclick = function() {
   updateContentWebSocket();
 };
-setInterval(updateContentWebSocket, 50);
+//setInterval(updateContentWebSocket, 50);
 
 
