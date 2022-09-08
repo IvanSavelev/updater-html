@@ -13,8 +13,8 @@ export function updateContentWebSocket() {
         newDomDocument:docNew,
         timeCloseBlink:500,
         oldDomDocument:document,
-        debug: true,
-        onlyAddAndDelete:true,
+        debug: false,
+        considerSpaces: false,
         moduleStatus: {
           move: 'working', //Moving (swapping elements so that they go in order)  working/not working
           move_analytical: 'working', //Analytical move  working/not working

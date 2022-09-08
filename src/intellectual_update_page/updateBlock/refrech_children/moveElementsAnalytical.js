@@ -71,7 +71,7 @@ function movePrev()
         item.stepPrevMax > 0 &&
         item.stepNextMax < 0
       ) {
-        BlockUploaderOld.move(i, i -2);
+        BlockUploaderOld.move(i, i -2, 'prev');
         item.turnOnLabel('move_analytical')  //Add a label
 
         item.stepPrevMax--;

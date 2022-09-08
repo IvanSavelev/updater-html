@@ -51,6 +51,7 @@ const settingsDefault = {
   changeStyle: true, //Change stiles 
   onlyUpdate: false, 
   onlyAddAndDelete: false,
+  considerSpaces: false,
   moduleStatus: {
     move: 'working', //Moving (swapping elements so that they go in order)  working/not working
     move_analytical: 'working', //Analytical move  working/not working
@@ -260,7 +261,7 @@ function preparationBlockUpdater(domElement) {
   if (domElement.nodeType === 1) {
 
     deleteClassDoubleSpace(domElement);
-    deleteFirstAndLastSpace(domElement);
+    deleteClassFirstAndLastSpace(domElement);
     deleteEmptyClass(domElement); //Removes empty classes: class=""
 
     for (let i = 0; i < domElement.childNodes.length; i++) {
@@ -277,7 +278,7 @@ function deleteClassDoubleSpace(domElement) {
   }
 }
 
-function deleteFirstAndLastSpace(domElement) {
+function deleteClassFirstAndLastSpace(domElement) {
   if (domElement.hasAttribute('class')) {
     let className = domElement.getAttribute('class');
     className = className.trim();

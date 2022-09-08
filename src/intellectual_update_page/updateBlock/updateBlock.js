@@ -44,17 +44,22 @@ function _updateBlock(BlockUploaderOld, BlockUploaderNew) {
  */
 function updateChild(BlockUploaderOld, BlockUploaderNew) {
   addNumberElementEqual(BlockUploaderOld, BlockUploaderNew);
+  BlockUploaderOld.logger('Start (old):', );
+  BlockUploaderNew.logger('Start (new):', );
   
   if(moduleStatus.move === 'working') {
     moveElements(BlockUploaderOld);
   }
-  if(moduleStatus.move_analytical === 'working') {
+  if(moduleStatus.move_analytical === 'working' && !BlockUploaderOld.settingsGeneral.onlyAddAndDelete) {
     moveElementsAnalytical(BlockUploaderOld, BlockUploaderNew);
   }
 
   deleteElements(BlockUploaderOld, BlockUploaderNew);
   addElements(BlockUploaderOld, BlockUploaderNew);
   updateElements(BlockUploaderOld, BlockUploaderNew);
+
+  BlockUploaderOld.logger('End (old):', );
+  BlockUploaderNew.logger('End (new):', );
 
   if(moduleStatus.move === 'working') {
     checkElements(BlockUploaderOld, BlockUploaderNew);

@@ -36,11 +36,24 @@ export class BlockUploader {
     }
     
   settingsGeneral = {} //Shared for all blocks, here because they mey be needing in any place  
+  
+  logColor = null;
 
   constructor(domElement) {
     Object.seal(this);
     this.domElement = domElement;
+    this.logColor = this.logColorList[Math.floor(Math.random()*this.logColorList.length)];
   }
+  
+  logColorList = [
+    'background: #ffffff; color: #ff0000',
+    'background: #ffffff; color: #ffa500',
+    'background: #ffffff; color: #d9d43f',
+    'background: #ffffff; color: #41d93f',
+    'background: #ffffff; color: #3fcbd9',
+    'background: #ffffff; color: #503fd9',
+    'background: #ffffff; color: #a53fd9',
+  ]
   
   turnOnLabel(nameLabel)
   {
@@ -101,13 +114,22 @@ export class BlockUploader {
    * Moves the BlockUploader object as well as the DOM element
    * @param plaseOld {int}
    * @param placeNew {int}
+   * @param typeMove next or prev
    */
-  move(plaseOld, placeNew) {
+  move(plaseOld, placeNew, typeMove='next') {
     let children = this.children;
     let domOld = children[plaseOld].domElement;
     let domNew = children[placeNew].domElement;
-    domNew.after(domOld);
-    children.splice(placeNew + 1, 0, children[plaseOld]);
+    if(typeMove === 'next') {
+      domNew.after(domOld);
+      children.splice(placeNew + 1, 0, children[plaseOld]);
+    }
+    if(typeMove === 'prev') {
+      domNew.before(domOld);
+      children.splice(placeNew, 0, children[plaseOld]);
+    }
+
+    
     if (placeNew < plaseOld) {
       plaseOld++;  //Prev
     }
@@ -181,7 +203,7 @@ export class BlockUploader {
           }
         }
         let textContent = (item.domElement.nodeType === 3) ? '' : item.domElement.textContent;
-        console.log(i + ' type "' + item.domElement.tagName + '" content:"' + textContent + '" nee: ' + item.numberElementEqual + showParametrText);
+        console.log('%c' + i + ' type "' + item.domElement.tagName + '" content:"' + textContent + '" nee: ' + item.numberElementEqual + showParametrText,this.logColor);
         i++;
       }
       console.log('\n');

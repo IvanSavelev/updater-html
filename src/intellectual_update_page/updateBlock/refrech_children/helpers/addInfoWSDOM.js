@@ -32,7 +32,7 @@ function addInfo(BlockUploaderNew) {
   }
 
   j =0;
-  for (let i = BlockUploaderNew.children.length - 1; i > 0; i--) {
+  for (let i = BlockUploaderNew.children.length - 1; i >= 0; i--) {
 
     let item = BlockUploaderNew.children[i];
     if(item.numberElementEqual !== undefined) {
