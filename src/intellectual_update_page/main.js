@@ -263,6 +263,10 @@ function preparationBlockUpdater(domElement) {
     deleteClassDoubleSpace(domElement);
     deleteClassFirstAndLastSpace(domElement);
     deleteEmptyClass(domElement); //Removes empty classes: class=""
+    if (!settings.considerSpaces) {
+      deleteSpace(domElement);
+    }
+    
 
     for (let i = 0; i < domElement.childNodes.length; i++) {
       preparationBlockUpdater(domElement.childNodes[i]);
@@ -289,7 +293,14 @@ function deleteClassFirstAndLastSpace(domElement) {
 function deleteEmptyClass(domElement) {
   if (domElement.classList.length === 0) {
     domElement.removeAttribute('class');
+    let html = domElement.innerHTML;
+    domElement.innerHTML = html.replaceAll('class=\"\"', "");
   }
+}
+
+function deleteSpace(domElement) {
+  let html = domElement.innerHTML;
+  domElement.innerHTML = html.replaceAll(/[\n\r ]/g, "");
 }
 
 
