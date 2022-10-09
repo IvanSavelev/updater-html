@@ -300,7 +300,7 @@ function deleteEmptyClass(domElement) {
 
 function deleteSpace(domElement) {
   let html = domElement.innerHTML;
-  domElement.innerHTML = html.replaceAll(/[\n\r ]/g, "");
+  domElement.innerHTML = html.replaceAll(/^.[\n\r ]|.[\n\r ]$/g, "");
 }
 
 
